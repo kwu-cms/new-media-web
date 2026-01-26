@@ -69,6 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
     loadExcelData();
 });
 
+// ページアンロード時にシェーダーをクリーンアップ
+window.addEventListener('beforeunload', () => {
+    // シェーダー切り替えタイマーをクリア
+    if (shaderToggleTimer) {
+        clearInterval(shaderToggleTimer);
+        shaderToggleTimer = null;
+    }
+    if (heroVideoShader) {
+        heroVideoShader.destroy();
+        heroVideoShader = null;
+    }
+});
+
 // yugop.comスタイルのランダムテキストアニメーションクラス
 class SimpleRandomText {
     constructor(options) {
@@ -578,6 +591,10 @@ let lastVideoUrl = null; // 最後に再生した動画（P）
 let secondLastVideoUrl = null; // その一つ前の動画（Q）
 let videoSwitchTimer = null;
 const VIDEO_PLAY_DURATION = 5; // 5秒再生
+let heroVideoShader = null; // WebGLシェーダーインスタンス
+let shaderToggleTimer = null; // シェーダーオン/オフ切り替えタイマー
+let isShaderActive = false; // シェーダーが現在アクティブかどうか（最初はオフ）
+const SHADER_TOGGLE_INTERVAL = 3000; // 3秒ごとに切り替え
 
 // Hero画像/動画を読み込む（Excelから設定）
 async function loadHeroMedia() {
@@ -663,6 +680,143 @@ function shuffleArrayAvoidingFirst(array, avoidUrls) {
     return shuffled;
 }
 
+// シェーダー効果のプリセット定義
+const SHADER_EFFECT_PRESETS = {
+    // 単一効果
+    rgbShift: {
+        rgbShift: { enabled: true, intensity: 0.01, speed: 0.5 },
+        glitch: { enabled: false },
+        mosaic: { enabled: false },
+        bloom: { enabled: false },
+        blur: { enabled: false },
+        vignette: { enabled: false },
+        tiling: { enabled: false }
+    },
+    glitch: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: true, intensity: 0.2, duration: 0.3, interval: 3.0 },
+        mosaic: { enabled: false },
+        bloom: { enabled: false },
+        blur: { enabled: false },
+        vignette: { enabled: false },
+        tiling: { enabled: false }
+    },
+    mosaic: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: false },
+        mosaic: { enabled: true, size: 25.0 },
+        bloom: { enabled: false },
+        blur: { enabled: false },
+        vignette: { enabled: false },
+        tiling: { enabled: false }
+    },
+    blur: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: false },
+        mosaic: { enabled: false },
+        bloom: { enabled: false },
+        blur: { enabled: true, intensity: 8.0 },
+        vignette: { enabled: false },
+        tiling: { enabled: false }
+    },
+    vignette: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: false },
+        mosaic: { enabled: false },
+        bloom: { enabled: false },
+        blur: { enabled: false },
+        vignette: { enabled: true, intensity: 0.6, radius: 0.75, softness: 0.4 },
+        tiling: { enabled: false }
+    },
+    bloom: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: false },
+        mosaic: { enabled: false },
+        bloom: { enabled: true, intensity: 2.0, threshold: 0.6, radius: 15.0 },
+        blur: { enabled: false },
+        vignette: { enabled: false },
+        tiling: { enabled: false }
+    },
+    tiling: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: false },
+        mosaic: { enabled: false },
+        bloom: { enabled: false },
+        blur: { enabled: false },
+        vignette: { enabled: false },
+        tiling: { enabled: true, countX: 2.0, countY: 2.0, offsetX: 0.0, offsetY: 0.0 }
+    },
+    // 2つ重ねがけ
+    rgbShiftVignette: {
+        rgbShift: { enabled: true, intensity: 0.008, speed: 0.5 },
+        glitch: { enabled: false },
+        mosaic: { enabled: false },
+        bloom: { enabled: false },
+        blur: { enabled: false },
+        vignette: { enabled: true, intensity: 0.5, radius: 0.8, softness: 0.3 },
+        tiling: { enabled: false }
+    },
+    blurVignette: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: false },
+        mosaic: { enabled: false },
+        bloom: { enabled: false },
+        blur: { enabled: true, intensity: 6.0 },
+        vignette: { enabled: true, intensity: 0.7, radius: 0.7, softness: 0.4 },
+        tiling: { enabled: false }
+    },
+    bloomVignette: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: false },
+        mosaic: { enabled: false },
+        bloom: { enabled: true, intensity: 1.8, threshold: 0.65, radius: 12.0 },
+        blur: { enabled: false },
+        vignette: { enabled: true, intensity: 0.55, radius: 0.75, softness: 0.35 },
+        tiling: { enabled: false }
+    },
+    glitchMosaic: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: true, intensity: 0.18, duration: 0.3, interval: 3.0 },
+        mosaic: { enabled: true, size: 30.0 },
+        bloom: { enabled: false },
+        blur: { enabled: false },
+        vignette: { enabled: false },
+        tiling: { enabled: false }
+    },
+    tilingBlur: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: false },
+        mosaic: { enabled: false },
+        bloom: { enabled: false },
+        blur: { enabled: true, intensity: 5.0 },
+        vignette: { enabled: false },
+        tiling: { enabled: true, countX: 3.0, countY: 3.0, offsetX: 0.0, offsetY: 0.0 }
+    },
+    // 効果なし
+    none: {
+        rgbShift: { enabled: false },
+        glitch: { enabled: false },
+        mosaic: { enabled: false },
+        bloom: { enabled: false },
+        blur: { enabled: false },
+        vignette: { enabled: false },
+        tiling: { enabled: false }
+    }
+};
+
+// シェーダー効果のプリセットリスト（ランダム選択用）
+const SHADER_PRESET_KEYS = Object.keys(SHADER_EFFECT_PRESETS);
+
+// ランダムにシェーダー効果のプリセットを選択
+function getRandomShaderPreset() {
+    const randomIndex = Math.floor(Math.random() * SHADER_PRESET_KEYS.length);
+    const presetKey = SHADER_PRESET_KEYS[randomIndex];
+    return {
+        presetName: presetKey,
+        config: JSON.parse(JSON.stringify(SHADER_EFFECT_PRESETS[presetKey])) // ディープコピー
+    };
+}
+
 // 新しいプレイリストを生成
 // currentP: 現在再生中の動画（P）、次のプレイリストで最初に来ないようにする
 function generateNewPlaylist(currentP = null) {
@@ -670,11 +824,16 @@ function generateNewPlaylist(currentP = null) {
         return;
     }
     
-    // 動画とランダムなシーク位置を含むプレイリストアイテムを作成
-    const playlistItems = heroVideoList.map(videoUrl => ({
-        videoUrl: videoUrl,
-        seekPosition: null // メタデータ読み込み後に決定
-    }));
+    // 動画とランダムなシーク位置、シェーダー効果を含むプレイリストアイテムを作成
+    const playlistItems = heroVideoList.map(videoUrl => {
+        const shaderPreset = getRandomShaderPreset();
+        return {
+            videoUrl: videoUrl,
+            seekPosition: null, // メタデータ読み込み後に決定
+            shaderConfig: shaderPreset.config, // シェーダー設定（JSONオブジェクト）
+            shaderPresetName: shaderPreset.presetName // プリセット名（デバッグ用）
+        };
+    });
     
     // PとQを最初に来ないようにシャッフル
     const avoidUrls = [];
@@ -686,7 +845,116 @@ function generateNewPlaylist(currentP = null) {
     currentPlaylist = shuffleArrayAvoidingFirst(playlistItems, avoidUrls);
     currentPlaylistIndex = 0;
     
-    console.log('新しいプレイリストを生成:', currentPlaylist.map(item => item.videoUrl));
+    console.log('新しいプレイリストを生成:', currentPlaylist.map(item => ({
+        video: item.videoUrl,
+        shader: item.shaderPresetName
+    })));
+}
+
+// シェーダーのオン/オフを切り替える
+function toggleShader() {
+    const heroVideo = document.getElementById('hero-background-video');
+    if (!heroVideo) return;
+    
+    // シェーダーが有効な設定かどうかを確認
+    if (typeof HeroVideoShader === 'undefined' || !HERO_SHADER_CONFIG || !HERO_SHADER_CONFIG.enabled) {
+        // シェーダーが無効な場合はvideo要素を表示
+        isShaderActive = false;
+        if (heroVideoShader) {
+            heroVideoShader.disable();
+            heroVideoShader = null;
+        }
+        heroVideo.style.display = 'block';
+        heroVideo.style.opacity = '0.4';
+        heroVideo.classList.add('active');
+        return;
+    }
+    
+    // シェーダーインスタンスを作成（まだ存在しない場合）
+    if (!heroVideoShader) {
+        heroVideoShader = new HeroVideoShader(heroVideo, null);
+    }
+    
+    // シェーダーの状態を切り替え
+    isShaderActive = !isShaderActive;
+    
+    // 状態を適用
+    applyShaderState();
+    
+    console.log(`シェーダー: ${isShaderActive ? 'ON' : 'OFF'}`);
+}
+
+// シェーダーのオン/オフ切り替えタイマーを開始（最初はオフ、既に実行中の場合は継続）
+function startShaderToggle() {
+    const heroVideo = document.getElementById('hero-background-video');
+    if (!heroVideo) return;
+    
+    // タイマーが既に実行中の場合は、現在の状態を維持して継続
+    if (shaderToggleTimer) {
+        // 現在の状態を適用
+        applyShaderState();
+        return;
+    }
+    
+    // 最初はオフから開始
+    isShaderActive = false;
+    
+    // シェーダーが有効な設定かどうかを確認
+    if (typeof HeroVideoShader === 'undefined' || !HERO_SHADER_CONFIG || !HERO_SHADER_CONFIG.enabled) {
+        // シェーダーが無効な場合はvideo要素を表示
+        if (heroVideoShader) {
+            heroVideoShader.disable();
+            heroVideoShader = null;
+        }
+        heroVideo.style.display = 'block';
+        heroVideo.style.opacity = '0.4';
+        heroVideo.classList.add('active');
+        return;
+    }
+    
+    // シェーダーインスタンスを作成（まだ存在しない場合）
+    if (!heroVideoShader) {
+        heroVideoShader = new HeroVideoShader(heroVideo, null);
+    }
+    
+    // 最初はvideo要素を表示（オフ状態）
+    applyShaderState();
+    
+    // 3秒ごとに切り替え
+    shaderToggleTimer = setInterval(() => {
+        toggleShader();
+    }, SHADER_TOGGLE_INTERVAL);
+    
+    console.log('シェーダー切り替えタイマー開始（最初はOFF）');
+}
+
+// 現在のシェーダー状態を適用
+function applyShaderState() {
+    const heroVideo = document.getElementById('hero-background-video');
+    if (!heroVideo) return;
+    
+    if (isShaderActive) {
+        // シェーダーをオン
+        if (heroVideoShader && heroVideoShader.isShaderEnabled()) {
+            heroVideoShader.show();
+        } else {
+            // シェーダーが初期化に失敗した場合はvideo要素を表示
+            if (heroVideoShader) {
+                heroVideoShader.hide();
+            }
+            heroVideo.style.display = 'block';
+            heroVideo.style.opacity = '0.4';
+            heroVideo.classList.add('active');
+        }
+    } else {
+        // シェーダーをオフ（video要素を表示）
+        if (heroVideoShader) {
+            heroVideoShader.hide();
+        }
+        heroVideo.style.display = 'block';
+        heroVideo.style.opacity = '0.4';
+        heroVideo.classList.add('active');
+    }
 }
 
 // プレイリストから次の動画を再生
@@ -753,8 +1021,23 @@ function playVideoAtRandomPosition(videoUrl, playlistItem, isLastVideo) {
         heroVideo.currentTime = seekPosition;
         heroVideo.play();
         
-        // 動画を表示
-        heroVideo.classList.add('active');
+        // プレイリストアイテムからシェーダー設定を取得して適用
+        if (playlistItem && playlistItem.shaderConfig) {
+            // シェーダーインスタンスを作成または更新
+            if (typeof HeroVideoShader !== 'undefined' && HERO_SHADER_CONFIG && HERO_SHADER_CONFIG.enabled) {
+                if (!heroVideoShader) {
+                    heroVideoShader = new HeroVideoShader(heroVideo, null);
+                }
+                // シェーダー設定を適用
+                if (heroVideoShader && heroVideoShader.isShaderEnabled()) {
+                    heroVideoShader.setConfig(playlistItem.shaderConfig);
+                    console.log(`シェーダー設定を適用: ${playlistItem.shaderPresetName || 'custom'}`, playlistItem.shaderConfig);
+                }
+            }
+        }
+        
+        // シェーダーのオン/オフ切り替えを開始（最初はオフ）
+        startShaderToggle();
         
         // 最後の動画（P）を再生している場合、次のプレイリストを生成
         if (isLastVideo) {
@@ -790,6 +1073,19 @@ function playVideoAtRandomPosition(videoUrl, playlistItem, isLastVideo) {
     // エラーハンドリング
     heroVideo.addEventListener('error', (e) => {
         console.log('Hero動画の読み込みに失敗しました:', videoUrl, e);
+        // シェーダーを無効化
+        if (heroVideoShader) {
+            heroVideoShader.disable();
+            heroVideoShader = null;
+        }
+        // シェーダー切り替えタイマーをクリア
+        if (shaderToggleTimer) {
+            clearInterval(shaderToggleTimer);
+            shaderToggleTimer = null;
+        }
+        // video要素を非表示
+        heroVideo.style.display = 'none';
+        heroVideo.style.opacity = '0';
         heroVideo.classList.remove('active');
         // 次の動画を試す
         setTimeout(() => {
@@ -1031,9 +1327,9 @@ function createStudentTableRow(student) {
                 : `<div class="student-table-image-placeholder">画像なし</div>`}
         </td>
         <td>${escapeHtml(student.studentId || '')}</td>
-        <td><strong>${escapeHtml(student.name || '')}</strong></td>
+        <td><strong>${escapeHtml(student.title || '')}</strong></td>
+        <td>${escapeHtml(student.name || '')}</td>
         <td>${escapeHtml(student.nameEn || '')}</td>
-        <td>${escapeHtml(student.title || '')}</td>
         <td>${escapeHtml(student.grade || '')}</td>
         <td><div class="student-table-tags">${tagLabels || '-'}</div></td>
     `;
@@ -1072,10 +1368,12 @@ function createStudentCard(student) {
             <div class="student-card-image-overlay"></div>
         </div>
         <div class="card-body student-card-body">
-            <h5 class="card-title student-card-name">${escapeHtml(student.name)}</h5>
-            <p class="card-text student-card-name-en">${escapeHtml(student.nameEn)}</p>
-            ${student.title ? `<p class="card-text student-card-title">${escapeHtml(student.title)}</p>` : ''}
-            ${tagLabels ? `<div class="student-card-tags">${tagLabels}</div>` : ''}
+            ${student.title ? `<h5 class="card-title student-card-title">${escapeHtml(student.title)}</h5>` : ''}
+            <div class="text-end mt-2">
+                <p class="card-text student-card-name mb-1">${escapeHtml(student.name)}</p>
+                <p class="card-text student-card-name-en mb-0" style="font-size: 0.9rem;">${escapeHtml(student.nameEn)}</p>
+            </div>
+            ${tagLabels ? `<div class="student-card-tags mt-3">${tagLabels}</div>` : ''}
         </div>
     `;
 

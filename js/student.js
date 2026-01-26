@@ -6,6 +6,45 @@ let studentsData = [];
 let currentStudent = null;
 // 画像関連の変数は使用しない（スライドPDFとレポートのみ表示）
 
+// タグの分類定義（main.jsと同じ）
+const TAG_CATEGORIES = {
+    '技術・手法': [
+        '3Dモデリング', 'AIモデリング', 'Blender', 'Live2D', 'VTuber', 'ピクセルアート',
+        '音声合成', 'ゲーム開発', 'Unity', 'ティラノビルダー', 'デジタルファブリケーション'
+    ],
+    'ジャンル・形式': [
+        'ノベルゲーム', 'アクションゲーム', 'アドベンチャーゲーム', 'ホラー',
+        'マンガ・アニメ', 'Live配信'
+    ],
+    'テーマ・領域': [
+        'キャラクターデザイン', 'デザイン技法', '空間デザイン', 'UIデザイン',
+        '体験のデザイン', '物語', 'シナリオ', 'イラスト', '文化研究',
+        'スペキュラティブデザイン', 'ペルソナ分析'
+    ]
+};
+
+// タグのカテゴリを取得
+function getTagCategory(tag) {
+    for (const [category, tags] of Object.entries(TAG_CATEGORIES)) {
+        if (tags.includes(tag)) {
+            return category;
+        }
+    }
+    return 'テーマ・領域'; // デフォルト
+}
+
+// タグラベルを生成
+function createTagLabels(tags) {
+    if (!tags || tags.length === 0) return '';
+    
+    return tags.map(tag => {
+        const category = getTagCategory(tag);
+        const categoryClass = category === '技術・手法' ? 'tag-technique' :
+                             category === 'ジャンル・形式' ? 'tag-genre' : 'tag-theme';
+        return `<span class="tag-badge ${categoryClass}">${escapeHtml(tag)}</span>`;
+    }).join('');
+}
+
 // ページ読み込み時に実行
 document.addEventListener('DOMContentLoaded', () => {
     // URLパラメータから学生IDを取得
@@ -104,9 +143,21 @@ function displayStudentDetail() {
     // 基本情報を設定
     document.getElementById('student-name').textContent = currentStudent.name;
     document.getElementById('student-name-en').textContent = currentStudent.nameEn;
-    document.getElementById('student-id').textContent = currentStudent.studentId;
-    document.getElementById('student-grade').textContent = currentStudent.grade;
     document.getElementById('research-title').textContent = currentStudent.title || '題目未設定';
+    
+    // ヘッダーに情報を設定
+    document.getElementById('header-research-title').textContent = currentStudent.title || '題目未設定';
+    document.getElementById('header-student-name').textContent = currentStudent.name;
+    document.getElementById('header-student-name-en').textContent = currentStudent.nameEn;
+    
+    // タグを表示（main.jsのcreateTagLabels関数を使用）
+    const tagLabels = createTagLabels(currentStudent.tags);
+    const headerTagsElement = document.getElementById('header-student-tags');
+    if (tagLabels) {
+        headerTagsElement.innerHTML = tagLabels;
+    } else {
+        headerTagsElement.innerHTML = '';
+    }
 
     // プレゼン資料を表示（最初に表示）
     displayPresentations();
@@ -733,6 +784,7 @@ function showError(message) {
 
 // HTMLエスケープ
 function escapeHtml(text) {
+    if (!text) return '';
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
