@@ -1,5 +1,10 @@
 # 2025年度 ニューメディア研究ゼミ 卒業研究閲覧ウェブサイト
 
+## 🌐 公開URL
+
+- **GitHub Pages**: https://kwu-cms.github.io/new-media-web/
+- **GitHubリポジトリ**: https://github.com/kwu-cms/new-media-web
+
 ## 概要
 
 このウェブサイトは、2025年度ニューメディア研究ゼミの4年生が行った卒業研究を閲覧できる静的ウェブサイトです。Excelファイルから学生データを読み込み、各学生の題目、画像、レポート（Word）、プレゼンテーション資料（PPTX）を表示します。
