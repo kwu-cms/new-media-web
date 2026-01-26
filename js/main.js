@@ -7,7 +7,99 @@ let studentsData = [];
 // ページ読み込み時に実行
 document.addEventListener('DOMContentLoaded', () => {
     loadExcelData();
+    setupScrollNavbar();
+    loadHeroImage();
 });
+
+// Hero画像を読み込む（Excelから設定）
+async function loadHeroImage() {
+    try {
+        const response = await fetch(EXCEL_FILE_PATH);
+        if (!response.ok) {
+            return;
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+        
+        // 設定シートまたは最初のシートからHero画像パスを取得
+        // 設定シートがある場合はそちらを優先
+        let heroImagePath = null;
+        
+        // 設定シートを探す
+        const configSheet = workbook.Sheets['設定'] || workbook.Sheets['設定'] || workbook.Sheets['config'] || workbook.Sheets['Config'];
+        if (configSheet) {
+            const configData = XLSX.utils.sheet_to_json(configSheet, { defval: '' });
+            if (configData.length > 0 && configData[0]['Hero画像パス']) {
+                heroImagePath = configData[0]['Hero画像パス'];
+            }
+        }
+        
+        // 設定シートがない場合、最初のシートの1行目から取得を試みる
+        if (!heroImagePath && jsonData.length > 0) {
+            // 最初の行にHero画像パスがあるかチェック（通常はないが、念のため）
+            heroImagePath = jsonData[0]['Hero画像パス'] || jsonData[0]['hero画像'] || null;
+        }
+        
+        // Hero画像を設定
+        if (heroImagePath && heroImagePath.trim()) {
+            const heroBg = document.getElementById('hero-background-image');
+            if (heroBg) {
+                // パスがURLの場合はそのまま使用、そうでなければassets/hero/を追加
+                let imageUrl = heroImagePath.trim();
+                if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+                    imageUrl = `assets/hero/${imageUrl}`;
+                }
+                heroBg.style.backgroundImage = `url('${imageUrl}')`;
+                heroBg.style.display = 'block';
+            }
+        }
+    } catch (error) {
+        console.log('Hero画像の読み込みに失敗しました（デフォルト背景を使用）:', error);
+    }
+}
+
+// スクロール時にナビゲーションバーを表示/非表示
+function setupScrollNavbar() {
+    const navbar = document.getElementById('main-navbar');
+    const heroSection = document.querySelector('.hero-section');
+    const body = document.body;
+    
+    if (!navbar || !heroSection) return;
+    
+    let lastScrollTop = 0;
+    let isNavbarVisible = false;
+    
+    const updateNavbar = () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const heroHeight = heroSection.offsetHeight;
+        
+        // ヒーローセクションを過ぎたかどうかをチェック
+        if (scrollTop > heroHeight * 0.7) {
+            if (!isNavbarVisible) {
+                navbar.style.transform = 'translateY(0)';
+                body.classList.add('has-navbar');
+                isNavbarVisible = true;
+            }
+        } else {
+            if (isNavbarVisible) {
+                navbar.style.transform = 'translateY(-100%)';
+                body.classList.remove('has-navbar');
+                isNavbarVisible = false;
+            }
+        }
+        
+        lastScrollTop = scrollTop;
+    };
+    
+    window.addEventListener('scroll', updateNavbar, { passive: true });
+    
+    // 初期状態を確認
+    updateNavbar();
+}
 
 // Excelファイルを読み込む
 async function loadExcelData() {
@@ -94,9 +186,12 @@ function createStudentCard(student) {
     let imageSrc = '';
     if (student.imagePath) {
         const firstImage = student.imagePath.split(',')[0].trim();
-        imageSrc = firstImage.startsWith('http') 
-            ? firstImage 
-            : `assets/images/${firstImage}`;
+        if (firstImage.startsWith('http')) {
+            imageSrc = firstImage;
+        } else {
+            // 学籍番号フォルダを含むパスに変換
+            imageSrc = `assets/images/${student.studentId}/${firstImage}`;
+        }
     }
 
     card.innerHTML = `
@@ -109,9 +204,6 @@ function createStudentCard(student) {
         <div class="card-body student-card-body">
             <h5 class="card-title student-card-name">${escapeHtml(student.name)}</h5>
             <p class="card-text student-card-name-en">${escapeHtml(student.nameEn)}</p>
-            <p class="card-text student-card-id">
-                <small class="text-muted">学籍番号: ${escapeHtml(student.studentId)}</small>
-            </p>
             ${student.title ? `<p class="card-text student-card-title">${escapeHtml(student.title)}</p>` : ''}
         </div>
     `;
