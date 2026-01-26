@@ -46,41 +46,32 @@
             <!-- Student Detail -->
             <div id="student-detail" style="display: none;">
                 <!-- Student Header Card -->
-                <div class="card shadow-lg mb-4 student-header-card">
+                <div class="card shadow-lg mb-4 student-header-card" id="student-header-card">
                     <div class="card-body p-5">
-                        <div class="row align-items-center justify-content-center">
-                            <div class="col-auto d-flex align-items-center justify-content-end">
-                                <button id="prev-student-btn" class="btn btn-nav-student" title="前の学生" disabled>
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
-                            </div>
-                            <div class="col-md-10 col-lg-8">
-                                <h1 class="student-header-title mb-3" id="header-research-title"></h1>
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="text-end">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-10 col-lg-8">
+                                <h1 class="student-header-title mb-4" id="header-research-title"></h1>
+                                <div class="d-flex justify-content-end align-items-center mb-4">
+                                    <div class="student-header-author">
                                         <h2 class="student-header-name mb-1" id="header-student-name"></h2>
                                         <p class="student-header-name-en mb-0" id="header-student-name-en"></p>
                                     </div>
                                 </div>
                                 <div class="student-header-tags" id="header-student-tags"></div>
                             </div>
-                            <div class="col-auto d-flex align-items-center justify-content-start">
-                                <button id="next-student-btn" class="btn btn-nav-student" title="次の学生" disabled>
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
-                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Research Title Card -->
-                <div class="card shadow-sm mb-4 research-title-card">
-                    <div class="card-body p-4">
-                        <h1 class="display-5 fw-bold mb-4" id="research-title"></h1>
-                        <div class="text-end">
-                            <h2 class="h4 fw-bold mb-1" id="student-name"></h2>
-                            <p class="text-muted mb-0" id="student-name-en" style="font-size: 0.9rem;"></p>
-                        </div>
+                    <!-- 左側クリック領域（前の学生） -->
+                    <div class="student-header-click-area student-header-click-left" id="prev-student-area">
+                        <button id="prev-student-btn" class="btn btn-nav-student" title="前の学生" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    </div>
+                    <!-- 右側クリック領域（次の学生） -->
+                    <div class="student-header-click-area student-header-click-right" id="next-student-area">
+                        <button id="next-student-btn" class="btn btn-nav-student" title="次の学生" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
 
