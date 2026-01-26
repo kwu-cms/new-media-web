@@ -13,11 +13,12 @@ import sys
 import zipfile
 from pathlib import Path
 
-# パス設定
-MASTER_DIR = Path("assets/presentations/master")
-ZIP_DIR = Path("assets/zip")
-TEMP_DIR = Path("assets/presentations/temp_zip")
-EXCEL_FILE = Path("data/students.xlsx")
+# パス設定（プロジェクトルートからの相対パス）
+SCRIPT_DIR = Path(__file__).parent.parent.parent
+MASTER_DIR = SCRIPT_DIR / "assets" / "presentations" / "master"
+ZIP_DIR = SCRIPT_DIR / "assets" / "zip"
+TEMP_DIR = SCRIPT_DIR / "assets" / "presentations" / "temp_zip"
+EXCEL_FILE = SCRIPT_DIR / "data" / "students.xlsx"
 
 def extract_student_id_from_filename(filename):
     """ファイル名から学籍番号を抽出（7桁の数字）"""

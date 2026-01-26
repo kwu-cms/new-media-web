@@ -10,9 +10,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-# パス設定
-PRESENTATIONS_DIR = Path("assets/presentations")
-EXCEL_FILE = Path("data/students.xlsx")
+# パス設定（プロジェクトルートからの相対パス）
+SCRIPT_DIR = Path(__file__).parent.parent.parent
+PRESENTATIONS_DIR = SCRIPT_DIR / "assets" / "presentations"
+EXCEL_FILE = SCRIPT_DIR / "data" / "students.xlsx"
 
 def check_libreoffice():
     """LibreOfficeが利用可能か確認"""
