@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-画像のサイズを固定するスクリプト
+画像のサイズを固定するスクリプト（非破壊版）
 Pillowを使用して画像をリサイズします
 
 処理内容:
@@ -8,17 +8,24 @@ Pillowを使用して画像をリサイズします
 - サイズを1280x1080に統一
 - アスペクト比が異なる場合はレターボックス（左右に黒帯）で中央配置
 - 10KB以下のファイルは削除
+- 元のファイルはバックアップディレクトリに保存（非破壊）
+
+使用方法:
+    python3 scripts/resize_images.py
 """
 
 import os
+import shutil
 from pathlib import Path
 from PIL import Image
+from datetime import datetime
 
 # 設定
 TARGET_WIDTH = 1280  # 目標幅（px）
 TARGET_HEIGHT = 1080  # 目標高さ（px）
 OUTPUT_FORMAT = 'PNG'  # PNGに統一
 MIN_FILE_SIZE = 10 * 1024  # 10KB（バイト）
+BACKUP_DIR = Path("assets/images_backup")  # バックアップディレクトリ
 
 def resize_image(input_path, output_path, target_width, target_height, output_format='PNG'):
     """
@@ -73,23 +80,29 @@ def resize_image(input_path, output_path, target_width, target_height, output_fo
         return False, None, str(e)
 
 def main():
-    """メイン処理"""
+    """メイン処理（非破壊版）"""
     images_dir = Path("assets/images")
     
     if not images_dir.exists():
         print(f"エラー: {images_dir} が存在しません")
         return
     
-    print("画像のリサイズ処理を開始します")
+    # バックアップディレクトリを作成（タイムスタンプ付き）
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_base_dir = BACKUP_DIR / timestamp
+    
+    print("画像のリサイズ処理を開始します（非破壊版）")
     print(f"目標サイズ: {TARGET_WIDTH}x{TARGET_HEIGHT}px")
     print(f"出力フォーマット: {OUTPUT_FORMAT}")
     print(f"最小ファイルサイズ: {MIN_FILE_SIZE // 1024}KB（それ以下は削除）")
+    print(f"バックアップ先: {backup_base_dir}")
     print("=" * 80)
     
     total_files = 0
     success_count = 0
     error_count = 0
     deleted_count = 0
+    skipped_count = 0
     
     # 各学生フォルダを処理
     for student_dir in sorted(images_dir.iterdir()):
@@ -102,10 +115,15 @@ def main():
         
         print(f"\n{student_id}:")
         
+        # 学生フォルダのバックアップディレクトリを作成
+        backup_student_dir = backup_base_dir / student_id
+        backup_student_dir.mkdir(parents=True, exist_ok=True)
+        
         # 画像ファイルを処理
         for img_file in sorted(os.listdir(student_dir)):
             # SVGはスキップ（ベクター画像のため）
             if img_file.lower().endswith('.svg'):
+                skipped_count += 1
                 continue
             
             if not img_file.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')):
@@ -116,10 +134,17 @@ def main():
             # ファイルサイズを確認
             file_size = input_path.stat().st_size
             if file_size < MIN_FILE_SIZE:
-                print(f"  🗑️  {img_file}: {file_size // 1024}KB（削除）")
+                # バックアップしてから削除
+                backup_path = backup_student_dir / img_file
+                shutil.copy2(input_path, backup_path)
                 input_path.unlink()
+                print(f"  🗑️  {img_file}: {file_size // 1024}KB（バックアップ後に削除）")
                 deleted_count += 1
                 continue
+            
+            # バックアップを作成
+            backup_path = backup_student_dir / img_file
+            shutil.copy2(input_path, backup_path)
             
             # 出力ファイル名を決定（PNGに統一）
             base_name = Path(img_file).stem
@@ -137,18 +162,24 @@ def main():
             if success:
                 success_count += 1
                 # 元のファイルと出力ファイルが異なる場合は元のファイルを削除
-                if input_path != output_path:
+                if input_path != output_path and input_path.exists():
                     input_path.unlink()
                 print(f"  ✓ {img_file}: {original_size[0]}x{original_size[1]} → {result[0]}x{result[1]} ({output_path.name})")
             else:
                 error_count += 1
-                print(f"  ✗ {img_file}: エラー - {result}")
+                # エラー時はバックアップから復元
+                if backup_path.exists():
+                    shutil.copy2(backup_path, input_path)
+                print(f"  ✗ {img_file}: エラー - {result}（バックアップから復元）")
     
     print("\n" + "=" * 80)
     print(f"処理完了:")
     print(f"  成功: {success_count}/{total_files}")
     print(f"  エラー: {error_count}/{total_files}")
     print(f"  削除（10KB以下）: {deleted_count}")
+    print(f"  スキップ（SVG）: {skipped_count}")
+    print(f"  バックアップ先: {backup_base_dir}")
+    print(f"\n元のファイルは {backup_base_dir} にバックアップされています。")
 
 if __name__ == '__main__':
     main()
