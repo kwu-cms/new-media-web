@@ -25,7 +25,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#main-content">卒業研究一覧</a>
+                        <a class="nav-link" href="#main-content">2025年度卒業研究一覧</a>
                     </li>
                 </ul>
             </div>
@@ -35,28 +35,48 @@
     <!-- Hero Section -->
     <section class="hero-section" id="hero-section">
         <div class="hero-background-image" id="hero-background-image"></div>
+        <video class="hero-background-video" id="hero-background-video" muted playsinline>
+            <source id="hero-video-source" src="" type="video/mp4">
+        </video>
         <div class="hero-overlay"></div>
-        <div class="container hero-content">
-            <div class="row justify-content-center text-center">
-                <div class="col-lg-8">
-                    <h1 class="hero-title animate-fade-in">2025年度</h1>
-                    <h2 class="hero-subtitle animate-fade-in-delay">ニューメディア研究ゼミ</h2>
-                    <p class="hero-description animate-fade-in-delay-2">卒業研究発表</p>
-                    <a href="#main-content" class="hero-scroll-indicator">
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
+        <div class="hero-content">
+            <div class="hero-title-bar">
+                <div class="hero-title-wrapper">
+                    <h1 class="hero-title animate-fade-in" id="hero-title" style="visibility: hidden;">ニューメディア研究ゼミ</h1>
+                </div>
+                <div class="hero-subtitle-wrapper">
+                    <h2 class="hero-subtitle animate-fade-in-delay" id="hero-subtitle" style="visibility: hidden;">2025年度 卒業研究発表</h2>
                 </div>
             </div>
         </div>
+        <a href="#main-content" class="hero-scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </a>
     </section>
 
     <!-- Main Content -->
     <main class="main-content" id="main-content">
         <div class="container py-5">
-            <div class="row mb-5">
+            <div class="row mb-4">
                 <div class="col-12 text-center">
                     <h2 class="section-title">卒業研究一覧</h2>
                     <p class="section-subtitle">各学生の研究成果をご覧ください</p>
+                </div>
+            </div>
+
+            <!-- View Toggle Buttons -->
+            <div class="row mb-4">
+                <div class="col-12 d-flex justify-content-end">
+                    <div class="btn-group" role="group" aria-label="ビュー切り替え">
+                        <input type="radio" class="btn-check" name="view-toggle" id="view-card" autocomplete="off" checked>
+                        <label class="btn btn-outline-primary" for="view-card">
+                            <i class="fas fa-th-large me-2"></i>カード表示
+                        </label>
+                        <input type="radio" class="btn-check" name="view-toggle" id="view-table" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="view-table">
+                            <i class="fas fa-table me-2"></i>表表示
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -77,6 +97,26 @@
 
             <!-- Student List -->
             <div id="student-list" class="row g-4"></div>
+            
+            <!-- Student Table (hidden by default) -->
+            <div id="student-table-container" style="display: none;">
+                <div class="table-responsive">
+                    <table class="table table-hover student-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">画像</th>
+                                <th style="width: 100px;">学籍番号</th>
+                                <th style="width: 120px;">氏名</th>
+                                <th style="width: 150px;">氏名（英字）</th>
+                                <th>研究題目</th>
+                                <th style="width: 100px;">所属学年</th>
+                            </tr>
+                        </thead>
+                        <tbody id="student-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -95,6 +135,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- SheetJSライブラリ -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <!-- Random Text Animation Library (オプション: js/random-text.umd.jsがあれば使用) -->
+    <script src="js/random-text.umd.js" onerror="console.log('random-text.umd.jsが見つかりません。組み込み版を使用します。')"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
