@@ -1978,6 +1978,10 @@ function createStudentCard(student) {
     const tagLabels = createTagLabels(student.tags);
     const hideNames = shouldHideNames();
     
+    // 年度タグを追加
+    const yearTag = student.grade ? `<span class="tag-badge tag-year">${student.grade}年度</span>` : '';
+    const allTags = yearTag + (tagLabels || '');
+    
     card.innerHTML = `
         <div class="student-card-image-wrapper">
             ${imageSrc 
@@ -1991,7 +1995,7 @@ function createStudentCard(student) {
                 <p class="card-text student-card-name mb-1">${escapeHtml(student.name)}</p>
                 <p class="card-text student-card-name-en mb-0" style="font-size: 0.9rem;">${escapeHtml(student.nameEn)}</p>
             </div>` : ''}
-            ${tagLabels ? `<div class="student-card-tags mt-3">${tagLabels}</div>` : ''}
+            ${allTags ? `<div class="student-card-tags mt-3">${allTags}</div>` : ''}
         </div>
     `;
 
