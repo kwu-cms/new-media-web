@@ -4,6 +4,45 @@ const EXCEL_FILE_PATH = 'data/students.xlsx';
 // 学生データを格納
 let studentsData = [];
 
+// タグの分類定義
+const TAG_CATEGORIES = {
+    '技術・手法': [
+        '3Dモデリング', 'AIモデリング', 'Blender', 'Live2D', 'VTuber', 'ピクセルアート',
+        '音声合成', 'ゲーム開発', 'Unity', 'ティラノビルダー', 'デジタルファブリケーション'
+    ],
+    'ジャンル・形式': [
+        'ノベルゲーム', 'アクションゲーム', 'アドベンチャーゲーム', 'ホラー',
+        'マンガ・アニメ', 'Live配信'
+    ],
+    'テーマ・領域': [
+        'キャラクターデザイン', 'デザイン技法', '空間デザイン', 'UIデザイン',
+        '体験のデザイン', '物語', 'シナリオ', 'イラスト', '文化研究',
+        'スペキュラティブデザイン', 'ペルソナ分析'
+    ]
+};
+
+// タグのカテゴリを取得
+function getTagCategory(tag) {
+    for (const [category, tags] of Object.entries(TAG_CATEGORIES)) {
+        if (tags.includes(tag)) {
+            return category;
+        }
+    }
+    return 'テーマ・領域'; // デフォルト
+}
+
+// タグラベルを生成
+function createTagLabels(tags) {
+    if (!tags || tags.length === 0) return '';
+    
+    return tags.map(tag => {
+        const category = getTagCategory(tag);
+        const categoryClass = category === '技術・手法' ? 'tag-technique' :
+                             category === 'ジャンル・形式' ? 'tag-genre' : 'tag-theme';
+        return `<span class="tag-badge ${categoryClass}">${escapeHtml(tag)}</span>`;
+    }).join('');
+}
+
 // ビュー状態管理
 let currentView = 'card'; // 'card' または 'table'
 
@@ -831,6 +870,10 @@ async function loadExcelData() {
         
         // データを正規化
         studentsData = jsonData.map((row, index) => {
+            // タグを配列に変換（キーワード列から読み込む）
+            const tagString = row['タグ'] || row['キーワード'] || '';
+            const tags = tagString.split(',').map(tag => tag.trim()).filter(tag => tag);
+            
             return {
                 id: row['No'] || index + 1,
                 grade: row['所属学年'] || '',
@@ -840,7 +883,8 @@ async function loadExcelData() {
                 title: row['題目'] || row['研究題目'] || '',
                 imagePath: row['画像パス'] || row['画像'] || '',
                 reportPath: row['レポートパス'] || row['レポート'] || '',
-                presentationPath: row['プレゼンパス'] || row['プレゼン'] || row['プレゼンテーション'] || ''
+                presentationPath: row['プレゼンパス'] || row['プレゼン'] || row['プレゼンテーション'] || '',
+                tags: tags
             };
         });
 
@@ -978,6 +1022,8 @@ function createStudentTableRow(student) {
         }
     }
 
+    const tagLabels = createTagLabels(student.tags);
+    
     row.innerHTML = `
         <td>
             ${imageSrc 
@@ -989,6 +1035,7 @@ function createStudentTableRow(student) {
         <td>${escapeHtml(student.nameEn || '')}</td>
         <td>${escapeHtml(student.title || '')}</td>
         <td>${escapeHtml(student.grade || '')}</td>
+        <td><div class="student-table-tags">${tagLabels || '-'}</div></td>
     `;
 
     return row;
@@ -1015,6 +1062,8 @@ function createStudentCard(student) {
         }
     }
 
+    const tagLabels = createTagLabels(student.tags);
+    
     card.innerHTML = `
         <div class="student-card-image-wrapper">
             ${imageSrc 
@@ -1026,6 +1075,7 @@ function createStudentCard(student) {
             <h5 class="card-title student-card-name">${escapeHtml(student.name)}</h5>
             <p class="card-text student-card-name-en">${escapeHtml(student.nameEn)}</p>
             ${student.title ? `<p class="card-text student-card-title">${escapeHtml(student.title)}</p>` : ''}
+            ${tagLabels ? `<div class="student-card-tags">${tagLabels}</div>` : ''}
         </div>
     `;
 
