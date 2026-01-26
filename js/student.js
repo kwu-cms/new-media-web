@@ -4,8 +4,7 @@ const EXCEL_FILE_PATH = 'data/students.xlsx';
 // 学生データを格納
 let studentsData = [];
 let currentStudent = null;
-let currentImageIndex = 0;
-let currentImages = [];
+// 画像関連の変数は使用しない（スライドPDFとレポートのみ表示）
 
 // ページ読み込み時に実行
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadExcelData(studentId);
-    setupLightbox();
 });
 
 // Excelファイルを読み込む
@@ -65,6 +63,7 @@ async function loadExcelData(targetStudentId) {
 
         currentStudent = student;
         displayStudentDetail();
+        setupNavigationButtons();
     } catch (error) {
         console.error('Excel読み込みエラー:', error);
         showError('Excelファイルの読み込みに失敗しました。ファイルが正しく配置されているか確認してください。');
@@ -104,139 +103,69 @@ function displayStudentDetail() {
     document.getElementById('student-grade').textContent = currentStudent.grade;
     document.getElementById('research-title').textContent = currentStudent.title || '題目未設定';
 
-    // 画像を表示
-    displayImages();
+    // プレゼン資料を表示（最初に表示）
+    displayPresentations();
 
     // レポートを表示
     displayReports();
-
-    // プレゼン資料を表示
-    displayPresentations();
+    
+    // 画像は表示しない（スライドPDFとレポートのみ）
 }
 
-// 画像を表示（カルーセルを使用）
-function displayImages() {
-    const imagesSection = document.getElementById('images-section');
-    const imageCarouselContainer = document.getElementById('image-carousel-container');
-
-    if (!currentStudent.imagePath) {
-        imagesSection.style.display = 'none';
+// 前後移動ボタンの設定
+function setupNavigationButtons() {
+    if (!currentStudent || studentsData.length === 0) {
         return;
     }
 
-    // 画像パスを配列に変換（カンマ区切りの場合に対応）
-    const imagePaths = currentStudent.imagePath.split(',').map(path => path.trim()).filter(path => path);
+    // 現在の学生のインデックスを取得
+    const currentIndex = studentsData.findIndex(s => String(s.id) === String(currentStudent.id));
     
-    if (imagePaths.length === 0) {
-        imagesSection.style.display = 'none';
-        return;
-    }
-
-    imagesSection.style.display = 'block';
-    imageCarouselContainer.innerHTML = '';
-
-    // フルパスに変換
-    currentImages = imagePaths.map(path => {
-        return path.startsWith('http') ? path : `assets/images/${path}`;
-    });
-
-    // カルーセルIDを生成
-    const carouselId = `carousel-${currentStudent.id}`;
+    // 前後の学生を取得
+    const prevStudent = currentIndex > 0 ? studentsData[currentIndex - 1] : null;
+    const nextStudent = currentIndex < studentsData.length - 1 ? studentsData[currentIndex + 1] : null;
     
-    // カルーセルHTMLを作成
-    let carouselHTML = `
-        <div id="${carouselId}" class="carousel slide carousel-fade" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-    `;
-
-    // インジケーター
-    currentImages.forEach((_, index) => {
-        carouselHTML += `<button type="button" data-bs-target="#${carouselId}" data-bs-slide-to="${index}" ${index === 0 ? 'class="active" aria-current="true"' : ''} aria-label="Slide ${index + 1}"></button>`;
-    });
-
-    carouselHTML += `
-            </div>
-            <div class="carousel-inner">
-    `;
-
-    // カルーセルアイテム
-    currentImages.forEach((imagePath, index) => {
-        carouselHTML += `
-            <div class="carousel-item ${index === 0 ? 'active' : ''}" data-bs-interval="5000">
-                <img src="${imagePath}" class="d-block w-100" alt="${currentStudent.name} - 画像 ${index + 1}" 
-                     onclick="openLightbox(${index})" style="cursor: pointer;"
-                     onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'800\\' height=\\'600\\'%3E%3Crect fill=\\'%23e9ecef\\' width=\\'800\\' height=\\'600\\'/%3E%3Ctext fill=\\'%236c757d\\' font-family=\\'sans-serif\\' font-size=\\'24\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'0.3em\\'%3E画像読み込みエラー%3C/text%3E%3C/svg%3E'">
-            </div>
-        `;
-    });
-
-    carouselHTML += `
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-    `;
-
-    // サムネイルギャラリー
-    if (currentImages.length > 1) {
-        carouselHTML += '<div class="thumbnail-gallery mt-4">';
-        currentImages.forEach((imagePath, index) => {
-            carouselHTML += `
-                <div class="thumbnail-item ${index === 0 ? 'active' : ''}" 
-                     onclick="switchCarouselSlide('${carouselId}', ${index})">
-                    <img src="${imagePath}" alt="Thumbnail ${index + 1}" 
-                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'120\\' height=\\'120\\'%3E%3Crect fill=\\'%23e9ecef\\' width=\\'120\\' height=\\'120\\'/%3E%3C/svg%3E'">
-                </div>
-            `;
-        });
-        carouselHTML += '</div>';
-    }
-
-    imageCarouselContainer.innerHTML = carouselHTML;
-
-    // カルーセルイベントリスナーを設定
-    const carouselElement = document.getElementById(carouselId);
-    if (carouselElement) {
-        carouselElement.addEventListener('slid.bs.carousel', function(event) {
-            const activeIndex = event.to;
-            updateThumbnailActive(activeIndex);
-            currentImageIndex = activeIndex;
-        });
-    }
-}
-
-// カルーセルのスライドを切り替え
-function switchCarouselSlide(carouselId, index) {
-    const carousel = bootstrap.Carousel.getInstance(document.getElementById(carouselId));
-    if (carousel) {
-        carousel.to(index);
-    }
-    updateThumbnailActive(index);
-    currentImageIndex = index;
-}
-
-// サムネイルのアクティブ状態を更新
-function updateThumbnailActive(activeIndex) {
-    const thumbnails = document.querySelectorAll('.thumbnail-item');
-    thumbnails.forEach((thumb, index) => {
-        if (index === activeIndex) {
-            thumb.classList.add('active');
+    // ボタンの参照を取得
+    const prevBtn = document.getElementById('prev-student-btn');
+    const nextBtn = document.getElementById('next-student-btn');
+    
+    // ボタンの有効/無効を設定
+    if (prevBtn) {
+        prevBtn.disabled = !prevStudent;
+        if (prevStudent) {
+            prevBtn.onclick = () => {
+                navigateToStudent(prevStudent.id);
+            };
         } else {
-            thumb.classList.remove('active');
+            prevBtn.onclick = null;
         }
-    });
+    }
+    
+    if (nextBtn) {
+        nextBtn.disabled = !nextStudent;
+        if (nextStudent) {
+            nextBtn.onclick = () => {
+                navigateToStudent(nextStudent.id);
+            };
+        } else {
+            nextBtn.onclick = null;
+        }
+    }
 }
 
-// レポートを表示
+// 指定された学生IDに遷移
+function navigateToStudent(studentId) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('id', studentId);
+    window.location.href = url.toString();
+}
+
+// 画像表示機能は使用しない（スライドPDFとレポートのみ表示）
+
+// レポートを表示（PDFとして表示）
 function displayReports() {
     const reportSection = document.getElementById('report-section');
-    const reportLinks = document.getElementById('report-links');
+    const reportContainer = document.getElementById('report-container');
 
     if (!currentStudent.reportPath) {
         reportSection.style.display = 'none';
@@ -252,32 +181,85 @@ function displayReports() {
     }
 
     reportSection.style.display = 'block';
-    reportLinks.innerHTML = '';
+    reportContainer.innerHTML = '';
 
     reportPaths.forEach((reportPath, index) => {
-        const fullPath = reportPath.startsWith('http') ? reportPath : `assets/reports/${reportPath}`;
-        const fileName = reportPath.split('/').pop() || `レポート${index + 1}.docx`;
+        // ファイル名を決定
+        let fileName;
+        let fullPath;
         
-        const link = document.createElement('a');
-        link.href = fullPath;
-        link.className = 'file-link-btn';
-        link.target = '_blank';
-        link.download = fileName;
+        if (reportPath.startsWith('http')) {
+            fullPath = reportPath;
+            fileName = reportPath.split('/').pop() || `レポート${index + 1}.pdf`;
+        } else if (reportPath.includes('/')) {
+            fullPath = `assets/reports/${reportPath}`;
+            fileName = reportPath.split('/').pop() || `レポート${index + 1}.pdf`;
+        } else {
+            // 学籍番号のみの場合は.pdfを追加
+            fileName = reportPath.endsWith('.pdf') ? reportPath : `${reportPath}.pdf`;
+            // reports/pdfフォルダ内のPDFを探す
+            fullPath = `assets/reports/pdf/${fileName}`;
+        }
         
-        link.innerHTML = `
-            <i class="bi bi-file-earmark-word-fill text-success"></i>
-            <span>${escapeHtml(fileName)}</span>
-            <i class="bi bi-download ms-auto"></i>
+        // PDFビューアー用のカードを作成
+        const pdfCard = document.createElement('div');
+        pdfCard.className = 'presentation-pdf-card';
+        pdfCard.innerHTML = `
+            <div class="pdf-header">
+                <div class="pdf-header-info">
+                    <i class="fas fa-file-alt text-success me-2"></i>
+                    <strong>${escapeHtml(fileName)}</strong>
+                </div>
+                <div class="pdf-controls">
+                    <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="prev" title="前のページ">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="pdf-page-info">
+                        <span class="pdf-page-current">1</span> / <span class="pdf-page-total">-</span>
+                    </span>
+                    <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="next" title="次のページ">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="zoom-out" title="縮小">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <span class="pdf-zoom-info">100%</span>
+                    <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="zoom-in" title="拡大">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="fit-width" title="幅に合わせる">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="pdf-viewer-container" data-pdf-path="${fullPath}">
+                <div class="pdf-loading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">読み込み中...</span>
+                    </div>
+                    <p class="mt-2">PDFを読み込んでいます...</p>
+                </div>
+                <div class="pdf-canvas-wrapper">
+                    <canvas class="pdf-canvas"></canvas>
+                </div>
+            </div>
         `;
-
-        reportLinks.appendChild(link);
+        reportContainer.appendChild(pdfCard);
+        
+        // PDFを読み込んで表示
+        loadPdfViewer(pdfCard, fullPath);
     });
 }
 
-// プレゼン資料を表示
+// PDF.jsのワーカーを設定
+if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+// プレゼン資料を表示（PDFとして表示）
 function displayPresentations() {
     const presentationSection = document.getElementById('presentation-section');
-    const presentationLinks = document.getElementById('presentation-links');
+    const presentationContainer = document.getElementById('presentation-container');
 
     if (!currentStudent.presentationPath) {
         presentationSection.style.display = 'none';
@@ -293,47 +275,238 @@ function displayPresentations() {
     }
 
     presentationSection.style.display = 'block';
-    presentationLinks.innerHTML = '';
+    presentationContainer.innerHTML = '';
 
     presentationPaths.forEach((presentationPath, index) => {
-        const fullPath = presentationPath.startsWith('http') ? presentationPath : `assets/presentations/${presentationPath}`;
-        const fileName = presentationPath.split('/').pop() || `プレゼン${index + 1}.pptx`;
+        // ファイル名を決定
+        let fileName;
+        let fullPath;
         
-        const link = document.createElement('a');
-        link.href = fullPath;
-        link.className = 'file-link-btn';
-        link.target = '_blank';
-        link.download = fileName;
-        
-        link.innerHTML = `
-            <i class="bi bi-file-earmark-slides-fill text-danger"></i>
-            <span>${escapeHtml(fileName)}</span>
-            <i class="bi bi-download ms-auto"></i>
-        `;
-
-        presentationLinks.appendChild(link);
-    });
-}
-
-// ライトボックスを設定（Bootstrap Modalを使用）
-function setupLightbox() {
-    // キーボード操作
-    document.addEventListener('keydown', (e) => {
-        const modal = document.getElementById('lightboxModal');
-        if (!modal || !modal.classList.contains('show')) return;
-
-        if (e.key === 'Escape') {
-            const bsModal = bootstrap.Modal.getInstance(modal);
-            if (bsModal) bsModal.hide();
-        } else if (e.key === 'ArrowLeft') {
-            const prevBtn = document.getElementById('lightbox-prev');
-            if (prevBtn) prevBtn.click();
-        } else if (e.key === 'ArrowRight') {
-            const nextBtn = document.getElementById('lightbox-next');
-            if (nextBtn) nextBtn.click();
+        if (presentationPath.startsWith('http')) {
+            fullPath = presentationPath;
+            fileName = presentationPath.split('/').pop() || `プレゼン${index + 1}.pdf`;
+        } else {
+            // PPTX拡張子の場合はPDFに変換
+            if (presentationPath.toLowerCase().endsWith('.pptx') || presentationPath.toLowerCase().endsWith('.ppt')) {
+                fileName = presentationPath.replace(/\.(pptx?)$/i, '.pdf');
+            } else if (/^\d{7}$/.test(presentationPath)) {
+                // 学籍番号のみの場合はPDF拡張子を追加
+                fileName = `${presentationPath}.pdf`;
+            } else {
+                fileName = presentationPath;
+            }
+            
+            // rehearsal/pdfフォルダ内のPDFを探す
+            fullPath = `assets/presentations/rehearsal/pdf/${fileName}`;
         }
+        
+        // PDFビューアー用のカードを作成
+        const pdfCard = document.createElement('div');
+        pdfCard.className = 'presentation-pdf-card';
+        pdfCard.innerHTML = `
+            <div class="pdf-header">
+                <div class="pdf-header-info">
+                    <i class="fas fa-file-pdf text-danger me-2"></i>
+                    <strong>${escapeHtml(fileName)}</strong>
+                </div>
+                <div class="pdf-controls">
+                    <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="prev" title="前のページ">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="pdf-page-info">
+                        <span class="pdf-page-current">1</span> / <span class="pdf-page-total">-</span>
+                    </span>
+                    <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="next" title="次のページ">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="zoom-out" title="縮小">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <span class="pdf-zoom-info">100%</span>
+                    <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="zoom-in" title="拡大">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="fit-width" title="幅に合わせる">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="pdf-viewer-container" data-pdf-path="${fullPath}">
+                <div class="pdf-loading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">読み込み中...</span>
+                    </div>
+                    <p class="mt-2">PDFを読み込んでいます...</p>
+                </div>
+                <div class="pdf-canvas-wrapper">
+                    <canvas class="pdf-canvas"></canvas>
+                </div>
+            </div>
+        `;
+        presentationContainer.appendChild(pdfCard);
+        
+        // PDFを読み込んで表示
+        loadPdfViewer(pdfCard, fullPath);
     });
 }
+
+// PDFビューアーを読み込む
+async function loadPdfViewer(container, pdfPath) {
+    const viewerContainer = container.querySelector('.pdf-viewer-container');
+    const canvas = container.querySelector('.pdf-canvas');
+    const loadingDiv = container.querySelector('.pdf-loading');
+    const canvasWrapper = container.querySelector('.pdf-canvas-wrapper');
+    const prevBtn = container.querySelector('[data-action="prev"]');
+    const nextBtn = container.querySelector('[data-action="next"]');
+    const zoomInBtn = container.querySelector('[data-action="zoom-in"]');
+    const zoomOutBtn = container.querySelector('[data-action="zoom-out"]');
+    const fitWidthBtn = container.querySelector('[data-action="fit-width"]');
+    const pageCurrent = container.querySelector('.pdf-page-current');
+    const pageTotal = container.querySelector('.pdf-page-total');
+    const zoomInfo = container.querySelector('.pdf-zoom-info');
+    
+    let pdfDoc = null;
+    let pageNum = 1;
+    let pageRendering = false;
+    let pageNumPending = null;
+    let scale = 1.0;
+    const scaleDelta = 0.2;
+    
+    try {
+        // PDF.jsを使用してPDFを読み込む
+        if (typeof pdfjsLib === 'undefined') {
+            // PDF.jsが利用できない場合はiframeにフォールバック
+            fallbackToIframe(viewerContainer, pdfPath);
+            return;
+        }
+        
+        const loadingTask = pdfjsLib.getDocument(pdfPath);
+        pdfDoc = await loadingTask.promise;
+        
+        pageTotal.textContent = pdfDoc.numPages;
+        
+        // 初期表示
+        renderPage(pageNum);
+        
+        // コントロールボタンのイベントリスナー
+        prevBtn.addEventListener('click', () => {
+            if (pageNum <= 1) return;
+            pageNum--;
+            queueRenderPage(pageNum);
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            queueRenderPage(pageNum);
+        });
+        
+        zoomInBtn.addEventListener('click', () => {
+            scale += scaleDelta;
+            queueRenderPage(pageNum);
+        });
+        
+        zoomOutBtn.addEventListener('click', () => {
+            if (scale <= scaleDelta) return;
+            scale -= scaleDelta;
+            queueRenderPage(pageNum);
+        });
+        
+        fitWidthBtn.addEventListener('click', () => {
+            // 幅に合わせる
+            const containerWidth = canvasWrapper.clientWidth;
+            canvas.width = containerWidth;
+            scale = containerWidth / canvas.width;
+            queueRenderPage(pageNum);
+        });
+        
+        // キーボードショートカット
+        document.addEventListener('keydown', (e) => {
+            if (!viewerContainer.contains(document.activeElement) && 
+                !container.contains(document.activeElement)) return;
+            
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (pageNum > 1) {
+                    pageNum--;
+                    queueRenderPage(pageNum);
+                }
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (pageNum < pdfDoc.numPages) {
+                    pageNum++;
+                    queueRenderPage(pageNum);
+                }
+            }
+        });
+        
+    } catch (error) {
+        console.error('PDF読み込みエラー:', error);
+        fallbackToIframe(viewerContainer, pdfPath);
+    }
+    
+    function queueRenderPage(num) {
+        if (pageRendering) {
+            pageNumPending = num;
+        } else {
+            renderPage(num);
+        }
+    }
+    
+    async function renderPage(num) {
+        pageRendering = true;
+        
+        try {
+            const page = await pdfDoc.getPage(num);
+            const viewport = page.getViewport({ scale: scale });
+            
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            const renderContext = {
+                canvasContext: canvas.getContext('2d'),
+                viewport: viewport
+            };
+            
+            await page.render(renderContext).promise;
+            
+            pageRendering = false;
+            pageCurrent.textContent = num;
+            zoomInfo.textContent = Math.round(scale * 100) + '%';
+            
+            // ボタンの有効/無効を更新
+            prevBtn.disabled = (num <= 1);
+            nextBtn.disabled = (num >= pdfDoc.numPages);
+            
+            if (pageNumPending !== null) {
+                renderPage(pageNumPending);
+                pageNumPending = null;
+            }
+            
+            // ローディングを非表示
+            loadingDiv.style.display = 'none';
+            canvasWrapper.style.display = 'block';
+            
+        } catch (error) {
+            console.error('ページレンダリングエラー:', error);
+            fallbackToIframe(viewerContainer, pdfPath);
+        }
+    }
+}
+
+// iframeにフォールバック
+function fallbackToIframe(container, pdfPath) {
+    container.innerHTML = `
+        <iframe src="${pdfPath}#toolbar=1&navpanes=1&scrollbar=1" 
+                class="pdf-iframe"
+                title="PDF Viewer"
+                allow="fullscreen">
+            <p>PDFを表示できません。<a href="${pdfPath}" target="_blank" rel="noopener noreferrer">こちらからダウンロード</a>してください。</p>
+        </iframe>
+    `;
+}
+
+// ライトボックス機能は使用しない（スライドPDFとレポートのみ表示）
 
 
 // エラーを表示
@@ -357,52 +530,4 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// グローバル関数（HTMLのonclickから呼び出される）
-window.openLightbox = function(index) {
-    if (currentImages.length === 0) return;
-    currentImageIndex = index;
-    const lightboxImg = document.getElementById('lightbox-img');
-    const modalElement = document.getElementById('lightboxModal');
-    const modal = new bootstrap.Modal(modalElement);
-    
-    lightboxImg.src = currentImages[currentImageIndex];
-    modal.show();
-
-    // ナビゲーションボタンのイベントリスナーを設定
-    const prevBtn = document.getElementById('lightbox-prev');
-    const nextBtn = document.getElementById('lightbox-next');
-
-    if (prevBtn && nextBtn) {
-        // 既存のイベントリスナーを削除して新しいものを追加
-        const newPrevBtn = prevBtn.cloneNode(true);
-        const newNextBtn = nextBtn.cloneNode(true);
-        prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
-        nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
-
-        document.getElementById('lightbox-prev').onclick = (e) => {
-            e.stopPropagation();
-            if (currentImages.length > 0) {
-                currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
-                document.getElementById('lightbox-img').src = currentImages[currentImageIndex];
-            }
-        };
-
-        document.getElementById('lightbox-next').onclick = (e) => {
-            e.stopPropagation();
-            if (currentImages.length > 0) {
-                currentImageIndex = (currentImageIndex + 1) % currentImages.length;
-                document.getElementById('lightbox-img').src = currentImages[currentImageIndex];
-            }
-        };
-    }
-};
-
-window.switchCarouselSlide = function(carouselId, index) {
-    const carouselElement = document.getElementById(carouselId);
-    if (carouselElement) {
-        const carousel = bootstrap.Carousel.getInstance(carouselElement) || new bootstrap.Carousel(carouselElement);
-        carousel.to(index);
-        updateThumbnailActive(index);
-        currentImageIndex = index;
-    }
-};
+// 画像関連のグローバル関数は使用しない（スライドPDFとレポートのみ表示）
