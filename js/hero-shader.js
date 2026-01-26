@@ -9,6 +9,7 @@
  */
 const HERO_SHADER_CONFIG = {
     enabled: true,  // falseにすると通常のvideo要素を使用
+    disableOnMobile: true,  // trueにするとモバイルデバイスでシェーダーを無効化（メモリ節約）
     rgbShift: {
         enabled: false,
         intensity: 0.01,
@@ -362,9 +363,18 @@ class HeroVideoShader {
         this.isEnabled = false; // シェーダーが有効かどうか
         this.currentConfig = null; // 現在適用されているシェーダー設定
         
-        // 設定でシェーダーが無効な場合は何もしない
-        if (!HERO_SHADER_CONFIG || !HERO_SHADER_CONFIG.enabled) {
+        // モバイルデバイスを検出
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
+                         ('ontouchstart' in window) || 
+                         (window.innerWidth <= 768);
+        
+        // 設定でシェーダーが無効な場合、またはモバイルで無効化設定が有効な場合は何もしない
+        if (!HERO_SHADER_CONFIG || !HERO_SHADER_CONFIG.enabled || 
+            (isMobile && HERO_SHADER_CONFIG.disableOnMobile)) {
             this.isEnabled = false;
+            if (isMobile && HERO_SHADER_CONFIG.disableOnMobile) {
+                console.log('モバイルデバイスを検出しました。WebGLシェーダーを無効化します（メモリ節約のため）。');
+            }
             // 既存のcanvasがあれば削除
             if (this.canvas && this.canvas.parentElement) {
                 this.canvas.parentElement.removeChild(this.canvas);
@@ -383,6 +393,17 @@ class HeroVideoShader {
     }
     
     initWebGL() {
+        // モバイルデバイスを検出
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
+                         ('ontouchstart' in window) || 
+                         (window.innerWidth <= 768);
+        
+        // モバイルデバイスではWebGLの使用を制限（メモリ制約のため）
+        // 必要に応じてモバイルではシェーダーを無効化することも可能
+        if (isMobile) {
+            console.log('モバイルデバイスを検出しました。WebGLシェーダーのメモリ使用を最適化します。');
+        }
+        
         // Canvasを設定
         if (!this.canvas) {
             this.canvas = document.createElement('canvas');
@@ -414,6 +435,16 @@ class HeroVideoShader {
                 this.canvas.parentElement.removeChild(this.canvas);
             }
             return;
+        }
+        
+        // モバイルデバイスでのWebGL制限を設定
+        if (isMobile) {
+            // 最大テクスチャサイズを確認
+            const maxTextureSize = this.gl.getParameter(this.gl.MAX_TEXTURE_SIZE);
+            console.log('最大テクスチャサイズ:', maxTextureSize);
+            
+            // メモリ使用を最適化するための設定
+            // 必要に応じて、モバイルではシェーダーを無効化するオプションを追加可能
         }
         
         // シェーダーをコンパイル
@@ -533,6 +564,15 @@ class HeroVideoShader {
                 return;
             }
             
+            // シェーダーが非表示の場合はアニメーションを停止（メモリ節約）
+            if (this.canvas && this.canvas.style.display === 'none') {
+                if (this.animationFrame) {
+                    cancelAnimationFrame(this.animationFrame);
+                    this.animationFrame = null;
+                }
+                return;
+            }
+            
             if (!this.video || this.video.readyState < 2) {
                 this.animationFrame = requestAnimationFrame(animate);
                 return;
@@ -543,10 +583,16 @@ class HeroVideoShader {
             // 実際の表示サイズを取得してcanvasに適用
             const rect = this.video.getBoundingClientRect();
             if (rect.width > 0 && rect.height > 0) {
-                // デバイスピクセル比を考慮
+                // デバイスピクセル比を考慮（モバイルでは最大2に制限してメモリ消費を削減）
                 const dpr = window.devicePixelRatio || 1;
-                const displayWidth = Math.floor(rect.width * dpr);
-                const displayHeight = Math.floor(rect.height * dpr);
+                // モバイルデバイスを検出（タッチデバイスまたは小さい画面）
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
+                                 ('ontouchstart' in window) || 
+                                 (window.innerWidth <= 768);
+                // モバイルではdevicePixelRatioを最大2に制限
+                const limitedDpr = isMobile ? Math.min(dpr, 2) : dpr;
+                const displayWidth = Math.floor(rect.width * limitedDpr);
+                const displayHeight = Math.floor(rect.height * limitedDpr);
                 
                 // サイズが変更された場合のみ更新（パフォーマンス最適化）
                 if (this.canvas.width !== displayWidth || this.canvas.height !== displayHeight) {
@@ -681,6 +727,10 @@ class HeroVideoShader {
                 this.video.style.opacity = '0';
                 this.video.classList.remove('active');
             }
+            // アニメーションループが停止している場合は再開
+            if (!this.animationFrame) {
+                this.animate();
+            }
         } else {
             // シェーダーが無効または失敗した場合はvideo要素を表示
             // Canvasを確実に非表示
@@ -699,6 +749,11 @@ class HeroVideoShader {
     }
     
     hide() {
+        // アニメーションループを停止してメモリを節約
+        if (this.animationFrame) {
+            cancelAnimationFrame(this.animationFrame);
+            this.animationFrame = null;
+        }
         // シェーダーCanvasを非表示
         if (this.canvas) {
             this.canvas.style.display = 'none';
