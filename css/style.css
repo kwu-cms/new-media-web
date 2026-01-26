@@ -225,32 +225,32 @@ body {
 }
 
 .hero-title {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 600;
     margin: 0;
     padding: 0;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     letter-spacing: 0.5px;
     line-height: 1.4;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    word-wrap: break-word;
     display: block;
     will-change: contents;
     text-align: left;
 }
 
 .hero-subtitle {
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 400;
     margin: 0;
     padding: 0;
     opacity: 0.9;
     letter-spacing: 0.3px;
     line-height: 1.4;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    word-wrap: break-word;
     display: block;
     will-change: contents;
     text-align: left;
@@ -289,6 +289,118 @@ body {
     0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
     40% { transform: translateX(-50%) translateY(10px); }
     60% { transform: translateX(-50%) translateY(5px); }
+}
+
+/* Hero Video Caption */
+.hero-video-caption {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
+    max-width: 50%;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.4s ease-in-out 0.1s,
+                transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+}
+
+.hero-video-caption.show {
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.hero-video-caption.hiding {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.3s ease-in-out,
+                transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+}
+
+.hero-video-caption-link {
+    display: block;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 20px 32px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+    color: white;
+    transition: background 0.3s ease;
+    border-radius: 0;
+}
+
+.hero-video-caption-link:hover {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.hero-video-caption-title-wrapper {
+    position: relative;
+    width: 100%;
+    text-align: left;
+    overflow: hidden;
+}
+
+.hero-video-caption-title {
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 1.215rem;
+    font-weight: 400;
+    font-style: italic;
+    margin: 0;
+    padding: 0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: visible;
+}
+
+@media (max-width: 992px) {
+    .hero-video-caption {
+        max-width: 60%;
+    }
+    
+    .hero-video-caption-link {
+        padding: 16px 24px;
+    }
+    
+    .hero-video-caption-title {
+        font-size: 1.0125rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-video-caption {
+        max-width: 100%;
+        right: 0;
+        left: 0;
+    }
+    
+    .hero-video-caption-link {
+        padding: 14px 20px;
+    }
+    
+    .hero-video-caption-title {
+        font-size: 0.891rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-video-caption-link {
+        padding: 12px 16px;
+    }
+    
+    .hero-video-caption-title {
+        font-size: 0.81rem;
+    }
 }
 
 /* Animation Classes */
@@ -427,8 +539,8 @@ html {
 .student-card-image-wrapper {
     position: relative;
     overflow: hidden;
-    height: 200px;
-    background: var(--primary-color);
+    height: 300px;
+    background: black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -439,7 +551,7 @@ html {
     height: 100%;
     object-fit: cover;
     transition: var(--transition-standard);
-    background: var(--primary-color);
+    background: black;
 }
 
 .student-card:hover .student-card-image-wrapper img {
@@ -451,7 +563,7 @@ html {
     align-items: center;
     justify-content: center;
     height: 100%;
-    color: rgba(255, 255, 255, 0.87);
+    color: white;
     font-size: 1rem;
     font-weight: 500;
     text-align: center;
@@ -1321,11 +1433,11 @@ html {
     }
     
     .hero-title {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
     }
 
     .hero-subtitle {
-        font-size: 0.9rem;
+        font-size: 1.08rem;
     }
 
     .hero-description {
@@ -1361,12 +1473,12 @@ html {
     }
     
     .hero-title {
-        font-size: 1.1rem;
+        font-size: 1.32rem;
         font-weight: 600;
     }
 
     .hero-subtitle {
-        font-size: 0.85rem;
+        font-size: 1.02rem;
     }
 
     .hero-description {
@@ -1440,12 +1552,12 @@ html {
     }
     
     .hero-title {
-        font-size: 1rem;
+        font-size: 1.2rem;
         font-weight: 600;
     }
 
     .hero-subtitle {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
     }
 
     .section-title {
