@@ -358,8 +358,9 @@ function displayPresentations() {
                 fileName = presentationPath;
             }
             
-            // rehearsal/pdfフォルダ内のPDFを探す
-            fullPath = `assets/presentations/rehearsal/pdf/${fileName}`;
+            // master/pdfを優先的に探す、なければrehearsal/pdfを参照
+            // フォールバック処理はloadPdfViewer内で行う
+            fullPath = `assets/presentations/master/pdf/${fileName}`;
         }
         
         // PDFビューアー用のカードを作成
@@ -448,8 +449,24 @@ async function loadPdfViewer(container, pdfPath, enableSpreadView = false) {
             return;
         }
         
-        const loadingTask = pdfjsLib.getDocument(pdfPath);
-        pdfDoc = await loadingTask.promise;
+        // master/pdfを優先的に試す、なければrehearsal/pdfにフォールバック
+        let loadingTask = pdfjsLib.getDocument(pdfPath);
+        let actualPdfPath = pdfPath;
+        
+        try {
+            pdfDoc = await loadingTask.promise;
+        } catch (error) {
+            // master/pdfが見つからない場合、rehearsal/pdfを試す
+            if (pdfPath.includes('/master/pdf/')) {
+                const rehearsalPath = pdfPath.replace('/master/pdf/', '/rehearsal/pdf/');
+                console.log(`master/pdfが見つかりません。rehearsal/pdfを試します: ${rehearsalPath}`);
+                loadingTask = pdfjsLib.getDocument(rehearsalPath);
+                actualPdfPath = rehearsalPath;
+                pdfDoc = await loadingTask.promise;
+            } else {
+                throw error;
+            }
+        }
         
         pageTotal.textContent = pdfDoc.numPages;
         
