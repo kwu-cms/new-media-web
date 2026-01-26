@@ -13,7 +13,8 @@ SCRIPT_DIR = Path(__file__).parent.parent.parent
 EXCEL_FILE = SCRIPT_DIR / "data" / "students.xlsx"
 IMAGES_DIR = SCRIPT_DIR / "assets" / "images"
 REPORTS_DIR = SCRIPT_DIR / "assets" / "reports" / "pdf"
-PRESENTATIONS_DIR = SCRIPT_DIR / "assets" / "presentations" / "rehearsal" / "pdf"
+PRESENTATIONS_MASTER_DIR = SCRIPT_DIR / "assets" / "presentations" / "master" / "pdf"
+PRESENTATIONS_REHEARSAL_DIR = SCRIPT_DIR / "assets" / "presentations" / "rehearsal" / "pdf"
 
 # 画像ファイルの拡張子
 IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.svg', '.PNG', '.JPG', '.JPEG', '.GIF', '.SVG', '.webp', '.WEBP'}
@@ -139,16 +140,23 @@ def update_excel_all_paths():
                     else:
                         print(f"⚠️  {student_id}: レポートファイルが見つかりません ({report_path})")
             
-            # プレゼンパスを設定
+            # プレゼンパスを設定（master/pdfを優先、なければrehearsal/pdf）
             if presentation_col:
                 presentation_cell = row[presentation_col - 1]
                 if not presentation_cell.value or str(presentation_cell.value).strip() == '':
                     presentation_path = f"{student_id}.pdf"
-                    presentation_file = PRESENTATIONS_DIR / presentation_path
-                    if presentation_file.exists():
+                    # master/pdfを優先的に確認
+                    master_file = PRESENTATIONS_MASTER_DIR / presentation_path
+                    rehearsal_file = PRESENTATIONS_REHEARSAL_DIR / presentation_path
+                    
+                    if master_file.exists():
                         presentation_cell.value = presentation_path
                         updated_presentation += 1
-                        print(f"✓ {student_id}: プレゼンパスを設定 → {presentation_path}")
+                        print(f"✓ {student_id}: プレゼンパスを設定（master） → {presentation_path}")
+                    elif rehearsal_file.exists():
+                        presentation_cell.value = presentation_path
+                        updated_presentation += 1
+                        print(f"✓ {student_id}: プレゼンパスを設定（rehearsal） → {presentation_path}")
                     else:
                         print(f"⚠️  {student_id}: プレゼンファイルが見つかりません ({presentation_path})")
         
@@ -185,7 +193,8 @@ def main():
     print(f"\nExcelファイル: {EXCEL_FILE}")
     print(f"画像フォルダ: {IMAGES_DIR}")
     print(f"レポートフォルダ: {REPORTS_DIR}")
-    print(f"プレゼンフォルダ: {PRESENTATIONS_DIR}\n")
+    print(f"プレゼンフォルダ（master優先）: {PRESENTATIONS_MASTER_DIR}")
+    print(f"プレゼンフォルダ（rehearsal）: {PRESENTATIONS_REHEARSAL_DIR}\n")
     
     if update_excel_all_paths():
         print("✓ Excelファイルの更新が完了しました")

@@ -11,8 +11,12 @@ const HERO_SHADER_CONFIG = {
     enabled: true,  // falseにすると通常のvideo要素を使用
     rgbShift: {
         enabled: false,
-        intensity: 0.0075,
-        speed: 0.5
+        intensity: 0.01,
+        speed: 0.5,
+        offsetX: 0.0,  // X方向のオフセット基本値
+        offsetY: 0.0,  // Y方向のオフセット基本値
+        speedX: 2.0,   // X方向の速度係数
+        speedY: 1.5    // Y方向の速度係数
     },
     glitch: {
         enabled: false,
@@ -22,7 +26,10 @@ const HERO_SHADER_CONFIG = {
     },
     mosaic: {
         enabled: false,
-        size: 20.0
+        size: 20.0,  // 後方互換性のため（sizeFrom/sizeToが未設定の場合に使用）
+        sizeFrom: 20.0,  // イージング開始値
+        sizeTo: 20.0,    // イージング終了値
+        easingDuration: 1.0  // イージングの期間（秒）
     },
     bloom: {
         enabled: false,
@@ -32,7 +39,10 @@ const HERO_SHADER_CONFIG = {
     },
     blur: {
         enabled: false,
-        intensity: 5.0  // ブラーの強度（ピクセル）
+        intensity: 5.0,  // 後方互換性のため（intensityFrom/intensityToが未設定の場合に使用）
+        intensityFrom: 5.0,  // イージング開始値
+        intensityTo: 5.0,    // イージング終了値
+        easingDuration: 2.0   // イージングの期間（秒）
     },
     vignette: {
         enabled: false,
@@ -42,10 +52,23 @@ const HERO_SHADER_CONFIG = {
     },
     tiling: {
         enabled: false,
-        countX: 2.0,  // X方向のタイリング数
-        countY: 2.0,  // Y方向のタイリング数
+        countX: 2.0,  // X方向のタイリング数（後方互換性のため）
+        countY: 2.0,  // Y方向のタイリング数（後方互換性のため）
+        countXTo: 2.0,  // イージング終了値（X方向）
+        countYTo: 2.0,  // イージング終了値（Y方向）
+        easingDuration: 2.0,  // イージングの期間（秒）
         offsetX: 0.0,  // X方向のオフセット
         offsetY: 0.0  // Y方向のオフセット
+    },
+    zoomIn: {
+        enabled: false,
+        intensity: 0.2,  // ズームインの強度（0.0-1.0、大きいほど拡大）
+        speed: 0.5  // ズームインの速度
+    },
+    zoomOut: {
+        enabled: false,
+        intensity: 0.3,  // ズームアウトの強度（0.0-1.0、大きいほど縮小）
+        speed: 0.5  // ズームアウトの速度
     }
 };
 
@@ -69,6 +92,10 @@ const fragmentShaderSource = `
     uniform vec2 u_resolution;
     uniform float u_time;
     uniform float u_rgbShiftIntensity;
+    uniform float u_rgbShiftOffsetX;
+    uniform float u_rgbShiftOffsetY;
+    uniform float u_rgbShiftSpeedX;
+    uniform float u_rgbShiftSpeedY;
     uniform float u_glitchIntensity;
     uniform float u_glitchDuration;
     uniform float u_glitchInterval;
@@ -76,12 +103,18 @@ const fragmentShaderSource = `
     uniform float u_glitchEnabled;
     uniform float u_mosaicEnabled;
     uniform float u_mosaicSize;
+    uniform float u_mosaicSizeFrom;
+    uniform float u_mosaicSizeTo;
+    uniform float u_mosaicEasingDuration;
     uniform float u_bloomEnabled;
     uniform float u_bloomIntensity;
     uniform float u_bloomThreshold;
     uniform float u_bloomRadius;
     uniform float u_blurEnabled;
     uniform float u_blurIntensity;
+    uniform float u_blurIntensityFrom;
+    uniform float u_blurIntensityTo;
+    uniform float u_blurEasingDuration;
     uniform float u_vignetteEnabled;
     uniform float u_vignetteIntensity;
     uniform float u_vignetteRadius;
@@ -89,8 +122,17 @@ const fragmentShaderSource = `
     uniform float u_tilingEnabled;
     uniform float u_tilingCountX;
     uniform float u_tilingCountY;
+    uniform float u_tilingCountXTo;
+    uniform float u_tilingCountYTo;
+    uniform float u_tilingEasingDuration;
     uniform float u_tilingOffsetX;
     uniform float u_tilingOffsetY;
+    uniform float u_zoomInEnabled;
+    uniform float u_zoomInIntensity;
+    uniform float u_zoomInSpeed;
+    uniform float u_zoomOutEnabled;
+    uniform float u_zoomOutIntensity;
+    uniform float u_zoomOutSpeed;
     
     varying vec2 v_texCoord;
     
@@ -149,25 +191,84 @@ const fragmentShaderSource = `
         vec2 uv = v_texCoord;
         vec2 sampleUV = uv;
         
-        // タイリング効果（最初に適用してUVを変更）
+        // ズームイン効果（タイリングの前に適用）
+        if (u_zoomInEnabled > 0.5) {
+            vec2 center = vec2(0.5, 0.5);
+            vec2 offset = uv - center;
+            // ズームイン：中心に向かって縮小（アニメーション付き）
+            float zoomScale = 1.0 - u_zoomInIntensity * (0.5 + 0.5 * sin(u_time * u_zoomInSpeed));
+            sampleUV = center + offset * zoomScale;
+        }
+        
+        // ズームアウト効果（タイリングの前に適用）
+        if (u_zoomOutEnabled > 0.5) {
+            vec2 center = vec2(0.5, 0.5);
+            vec2 offset = uv - center;
+            // ズームアウト：中心から拡大（アニメーション付き）
+            float zoomScale = 1.0 + u_zoomOutIntensity * (0.5 + 0.5 * sin(u_time * u_zoomOutSpeed));
+            sampleUV = center + offset * zoomScale;
+        }
+        
+        // タイリング効果（ズームの後に適用）
         if (u_tilingEnabled > 0.5) {
+            // 2つの値の間でイージング（ease-in-out、一方向のみ、往復しない）
+            float tilingCountX;
+            float tilingCountY;
+            if (u_tilingEasingDuration > 0.0 && (u_tilingCountX != u_tilingCountXTo || u_tilingCountY != u_tilingCountYTo)) {
+                // イージング周期を計算（0.0-1.0の範囲でループ、往復しない）
+                // 目的の値に到達する前に次の値が設定されるため、連続的に変化する
+                float easingCycle = mod(u_time, u_tilingEasingDuration) / u_tilingEasingDuration;
+                // ease-in-out補間
+                float t = easingCycle * easingCycle * (3.0 - 2.0 * easingCycle);
+                tilingCountX = mix(u_tilingCountX, u_tilingCountXTo, t);
+                tilingCountY = mix(u_tilingCountY, u_tilingCountYTo, t);
+            } else {
+                // イージングが無効な場合は通常のcountX/countYを使用
+                tilingCountX = u_tilingCountX;
+                tilingCountY = u_tilingCountY;
+            }
             sampleUV = vec2(
-                mod(uv.x * u_tilingCountX + u_tilingOffsetX, 1.0),
-                mod(uv.y * u_tilingCountY + u_tilingOffsetY, 1.0)
+                mod(sampleUV.x * tilingCountX + u_tilingOffsetX, 1.0),
+                mod(sampleUV.y * tilingCountY + u_tilingOffsetY, 1.0)
             );
         }
         
         // モザイク効果（タイリングの後に適用）
         if (u_mosaicEnabled > 0.5) {
-            sampleUV = floor(sampleUV * u_resolution / u_mosaicSize) * u_mosaicSize / u_resolution;
+            // 2つの値の間でイージング（ease-in-out）
+            float mosaicSize;
+            if (u_mosaicEasingDuration > 0.0 && u_mosaicSizeFrom != u_mosaicSizeTo) {
+                // イージング周期を計算（0.0-1.0）
+                float easingCycle = mod(u_time, u_mosaicEasingDuration * 2.0) / u_mosaicEasingDuration;
+                float t;
+                if (easingCycle < 1.0) {
+                    // 0.0-1.0: sizeFromからsizeToへ
+                    t = easingCycle;
+                } else {
+                    // 1.0-2.0: sizeToからsizeFromへ
+                    t = 2.0 - easingCycle;
+                }
+                // ease-in-out補間
+                t = t * t * (3.0 - 2.0 * t);
+                mosaicSize = mix(u_mosaicSizeFrom, u_mosaicSizeTo, t);
+            } else {
+                // イージングが無効な場合は通常のsizeを使用
+                mosaicSize = u_mosaicSize;
+            }
+            // sizeが0以下の場合はモザイク効果を適用しない（通常表示）
+            if (mosaicSize > 0.0) {
+                sampleUV = floor(sampleUV * u_resolution / mosaicSize) * mosaicSize / u_resolution;
+            }
         }
         
         vec3 color;
         
         // RGBシフト（横方向と縦方向の両方に適用）
         if (u_rgbShiftEnabled > 0.5) {
-            float shiftX = u_rgbShiftIntensity * (0.5 + 0.5 * sin(u_time * 2.0));
-            float shiftY = u_rgbShiftIntensity * (0.5 + 0.5 * cos(u_time * 1.5));
+            // オフセット計算（パラメータ化）
+            // 基本オフセット + 時間ベースのアニメーション
+            float shiftX = u_rgbShiftOffsetX + u_rgbShiftIntensity * sin(u_time * u_rgbShiftSpeedX);
+            float shiftY = u_rgbShiftOffsetY + u_rgbShiftIntensity * cos(u_time * u_rgbShiftSpeedY);
             
             vec2 offsetR = vec2(shiftX, shiftY);
             vec2 offsetG = vec2(0.0, 0.0);
@@ -203,7 +304,27 @@ const fragmentShaderSource = `
         
         // ブラー効果
         if (u_blurEnabled > 0.5) {
-            color = sampleBlur(sampleUV, u_blurIntensity);
+            // 2つの値の間でイージング（ease-in-out）
+            float blurIntensity;
+            if (u_blurEasingDuration > 0.0 && u_blurIntensityFrom != u_blurIntensityTo) {
+                // イージング周期を計算（0.0-1.0）
+                float easingCycle = mod(u_time, u_blurEasingDuration * 2.0) / u_blurEasingDuration;
+                float t;
+                if (easingCycle < 1.0) {
+                    // 0.0-1.0: intensityFromからintensityToへ
+                    t = easingCycle;
+                } else {
+                    // 1.0-2.0: intensityToからintensityFromへ
+                    t = 2.0 - easingCycle;
+                }
+                // ease-in-out補間
+                t = t * t * (3.0 - 2.0 * t);
+                blurIntensity = mix(u_blurIntensityFrom, u_blurIntensityTo, t);
+            } else {
+                // イージングが無効な場合は通常のintensityを使用
+                blurIntensity = u_blurIntensity;
+            }
+            color = sampleBlur(sampleUV, blurIntensity);
         }
         
         // ブルーム効果（元のテクスチャからサンプリング）
@@ -450,6 +571,10 @@ class HeroVideoShader {
             const resolutionLocation = this.gl.getUniformLocation(this.program, 'u_resolution');
             const timeLocation = this.gl.getUniformLocation(this.program, 'u_time');
             const rgbShiftIntensityLocation = this.gl.getUniformLocation(this.program, 'u_rgbShiftIntensity');
+            const rgbShiftOffsetXLocation = this.gl.getUniformLocation(this.program, 'u_rgbShiftOffsetX');
+            const rgbShiftOffsetYLocation = this.gl.getUniformLocation(this.program, 'u_rgbShiftOffsetY');
+            const rgbShiftSpeedXLocation = this.gl.getUniformLocation(this.program, 'u_rgbShiftSpeedX');
+            const rgbShiftSpeedYLocation = this.gl.getUniformLocation(this.program, 'u_rgbShiftSpeedY');
             const glitchIntensityLocation = this.gl.getUniformLocation(this.program, 'u_glitchIntensity');
             const glitchDurationLocation = this.gl.getUniformLocation(this.program, 'u_glitchDuration');
             const glitchIntervalLocation = this.gl.getUniformLocation(this.program, 'u_glitchInterval');
@@ -457,12 +582,18 @@ class HeroVideoShader {
             const glitchEnabledLocation = this.gl.getUniformLocation(this.program, 'u_glitchEnabled');
             const mosaicEnabledLocation = this.gl.getUniformLocation(this.program, 'u_mosaicEnabled');
             const mosaicSizeLocation = this.gl.getUniformLocation(this.program, 'u_mosaicSize');
+            const mosaicSizeFromLocation = this.gl.getUniformLocation(this.program, 'u_mosaicSizeFrom');
+            const mosaicSizeToLocation = this.gl.getUniformLocation(this.program, 'u_mosaicSizeTo');
+            const mosaicEasingDurationLocation = this.gl.getUniformLocation(this.program, 'u_mosaicEasingDuration');
             const bloomEnabledLocation = this.gl.getUniformLocation(this.program, 'u_bloomEnabled');
             const bloomIntensityLocation = this.gl.getUniformLocation(this.program, 'u_bloomIntensity');
             const bloomThresholdLocation = this.gl.getUniformLocation(this.program, 'u_bloomThreshold');
             const bloomRadiusLocation = this.gl.getUniformLocation(this.program, 'u_bloomRadius');
             const blurEnabledLocation = this.gl.getUniformLocation(this.program, 'u_blurEnabled');
             const blurIntensityLocation = this.gl.getUniformLocation(this.program, 'u_blurIntensity');
+            const blurIntensityFromLocation = this.gl.getUniformLocation(this.program, 'u_blurIntensityFrom');
+            const blurIntensityToLocation = this.gl.getUniformLocation(this.program, 'u_blurIntensityTo');
+            const blurEasingDurationLocation = this.gl.getUniformLocation(this.program, 'u_blurEasingDuration');
             const vignetteEnabledLocation = this.gl.getUniformLocation(this.program, 'u_vignetteEnabled');
             const vignetteIntensityLocation = this.gl.getUniformLocation(this.program, 'u_vignetteIntensity');
             const vignetteRadiusLocation = this.gl.getUniformLocation(this.program, 'u_vignetteRadius');
@@ -470,13 +601,26 @@ class HeroVideoShader {
             const tilingEnabledLocation = this.gl.getUniformLocation(this.program, 'u_tilingEnabled');
             const tilingCountXLocation = this.gl.getUniformLocation(this.program, 'u_tilingCountX');
             const tilingCountYLocation = this.gl.getUniformLocation(this.program, 'u_tilingCountY');
+            const tilingCountXToLocation = this.gl.getUniformLocation(this.program, 'u_tilingCountXTo');
+            const tilingCountYToLocation = this.gl.getUniformLocation(this.program, 'u_tilingCountYTo');
+            const tilingEasingDurationLocation = this.gl.getUniformLocation(this.program, 'u_tilingEasingDuration');
             const tilingOffsetXLocation = this.gl.getUniformLocation(this.program, 'u_tilingOffsetX');
             const tilingOffsetYLocation = this.gl.getUniformLocation(this.program, 'u_tilingOffsetY');
+            const zoomInEnabledLocation = this.gl.getUniformLocation(this.program, 'u_zoomInEnabled');
+            const zoomInIntensityLocation = this.gl.getUniformLocation(this.program, 'u_zoomInIntensity');
+            const zoomInSpeedLocation = this.gl.getUniformLocation(this.program, 'u_zoomInSpeed');
+            const zoomOutEnabledLocation = this.gl.getUniformLocation(this.program, 'u_zoomOutEnabled');
+            const zoomOutIntensityLocation = this.gl.getUniformLocation(this.program, 'u_zoomOutIntensity');
+            const zoomOutSpeedLocation = this.gl.getUniformLocation(this.program, 'u_zoomOutSpeed');
             
             this.gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height);
             this.time += 0.016; // 約60fps
             this.gl.uniform1f(timeLocation, this.time);
             this.gl.uniform1f(rgbShiftIntensityLocation, config.rgbShift?.intensity || 0.0);
+            this.gl.uniform1f(rgbShiftOffsetXLocation, config.rgbShift?.offsetX || 0.0);
+            this.gl.uniform1f(rgbShiftOffsetYLocation, config.rgbShift?.offsetY || 0.0);
+            this.gl.uniform1f(rgbShiftSpeedXLocation, config.rgbShift?.speedX || 2.0);
+            this.gl.uniform1f(rgbShiftSpeedYLocation, config.rgbShift?.speedY || 1.5);
             this.gl.uniform1f(glitchIntensityLocation, config.glitch?.intensity || 0.0);
             this.gl.uniform1f(glitchDurationLocation, config.glitch?.duration || 0.0);
             this.gl.uniform1f(glitchIntervalLocation, config.glitch?.interval || 0.0);
@@ -484,12 +628,18 @@ class HeroVideoShader {
             this.gl.uniform1f(glitchEnabledLocation, (config.glitch?.enabled && config.glitch.enabled) ? 1.0 : 0.0);
             this.gl.uniform1f(mosaicEnabledLocation, (config.mosaic?.enabled && config.mosaic.enabled) ? 1.0 : 0.0);
             this.gl.uniform1f(mosaicSizeLocation, config.mosaic?.size || 20.0);
+            this.gl.uniform1f(mosaicSizeFromLocation, config.mosaic?.sizeFrom !== undefined ? config.mosaic.sizeFrom : (config.mosaic?.size || 20.0));
+            this.gl.uniform1f(mosaicSizeToLocation, config.mosaic?.sizeTo !== undefined ? config.mosaic.sizeTo : (config.mosaic?.size || 20.0));
+            this.gl.uniform1f(mosaicEasingDurationLocation, config.mosaic?.easingDuration !== undefined ? config.mosaic.easingDuration : 1.0);
             this.gl.uniform1f(bloomEnabledLocation, (config.bloom?.enabled && config.bloom.enabled) ? 1.0 : 0.0);
             this.gl.uniform1f(bloomIntensityLocation, config.bloom?.intensity || 1.5);
             this.gl.uniform1f(bloomThresholdLocation, config.bloom?.threshold || 0.7);
             this.gl.uniform1f(bloomRadiusLocation, config.bloom?.radius || 10.0);
             this.gl.uniform1f(blurEnabledLocation, (config.blur?.enabled && config.blur.enabled) ? 1.0 : 0.0);
             this.gl.uniform1f(blurIntensityLocation, config.blur?.intensity || 5.0);
+            this.gl.uniform1f(blurIntensityFromLocation, config.blur?.intensityFrom !== undefined ? config.blur.intensityFrom : (config.blur?.intensity || 5.0));
+            this.gl.uniform1f(blurIntensityToLocation, config.blur?.intensityTo !== undefined ? config.blur.intensityTo : (config.blur?.intensity || 5.0));
+            this.gl.uniform1f(blurEasingDurationLocation, config.blur?.easingDuration !== undefined ? config.blur.easingDuration : 2.0);
             this.gl.uniform1f(vignetteEnabledLocation, (config.vignette?.enabled && config.vignette.enabled) ? 1.0 : 0.0);
             this.gl.uniform1f(vignetteIntensityLocation, config.vignette?.intensity || 0.5);
             this.gl.uniform1f(vignetteRadiusLocation, config.vignette?.radius || 0.8);
@@ -497,8 +647,17 @@ class HeroVideoShader {
             this.gl.uniform1f(tilingEnabledLocation, (config.tiling?.enabled && config.tiling.enabled) ? 1.0 : 0.0);
             this.gl.uniform1f(tilingCountXLocation, config.tiling?.countX || 2.0);
             this.gl.uniform1f(tilingCountYLocation, config.tiling?.countY || 2.0);
+            this.gl.uniform1f(tilingCountXToLocation, config.tiling?.countXTo !== undefined ? config.tiling.countXTo : (config.tiling?.countX || 2.0));
+            this.gl.uniform1f(tilingCountYToLocation, config.tiling?.countYTo !== undefined ? config.tiling.countYTo : (config.tiling?.countY || 2.0));
+            this.gl.uniform1f(tilingEasingDurationLocation, config.tiling?.easingDuration !== undefined ? config.tiling.easingDuration : 2.0);
             this.gl.uniform1f(tilingOffsetXLocation, config.tiling?.offsetX || 0.0);
             this.gl.uniform1f(tilingOffsetYLocation, config.tiling?.offsetY || 0.0);
+            this.gl.uniform1f(zoomInEnabledLocation, (config.zoomIn?.enabled && config.zoomIn.enabled) ? 1.0 : 0.0);
+            this.gl.uniform1f(zoomInIntensityLocation, config.zoomIn?.intensity || 0.2);
+            this.gl.uniform1f(zoomInSpeedLocation, config.zoomIn?.speed || 0.5);
+            this.gl.uniform1f(zoomOutEnabledLocation, (config.zoomOut?.enabled && config.zoomOut.enabled) ? 1.0 : 0.0);
+            this.gl.uniform1f(zoomOutIntensityLocation, config.zoomOut?.intensity || 0.3);
+            this.gl.uniform1f(zoomOutSpeedLocation, config.zoomOut?.speed || 0.5);
             
             // 描画
             this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
