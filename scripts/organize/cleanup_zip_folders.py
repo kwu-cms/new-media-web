@@ -10,8 +10,9 @@ import sys
 from pathlib import Path
 import re
 
-# パス設定
-ZIP_DIR = Path("assets/presentations/zip")
+# パス設定（プロジェクトルートからの相対パス）
+SCRIPT_DIR = Path(__file__).parent.parent.parent
+ZIP_DIR = SCRIPT_DIR / "assets" / "presentations" / "zip"
 
 def find_media_folder(student_folder):
     """学籍番号フォルダ内のmediaフォルダを検索"""
