@@ -4,7 +4,7 @@ const JSON_FILE_PATH = 'data/students.json';
 // 日付をチェックして、1/28以降かどうかを判定（main.jsと同じ関数）
 function shouldHideNames() {
     const today = new Date();
-    const cutoffDate = new Date(2025, 0, 28); // 2025年1月28日
+    const cutoffDate = new Date(2026, 0, 28); // 2026年1月28日
     return today >= cutoffDate;
 }
 

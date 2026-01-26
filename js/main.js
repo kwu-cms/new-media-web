@@ -1911,7 +1911,7 @@ function displayStudentsTable() {
 // 日付をチェックして、1/28以降かどうかを判定
 function shouldHideNames() {
     const today = new Date();
-    const cutoffDate = new Date(2025, 0, 28); // 2025年1月28日
+    const cutoffDate = new Date(2026, 0, 28); // 2026年1月28日
     return today >= cutoffDate;
 }
 
@@ -1937,6 +1937,9 @@ function createStudentTableRow(student) {
     const tagLabels = createTagLabels(student.tags);
     const hideNames = shouldHideNames();
     
+    // 年度タグを追加
+    const yearTag = student.grade ? `<span class="tag-badge tag-year">${student.grade}年度</span>` : '';
+    
     row.innerHTML = `
         <td>
             ${imageSrc 
@@ -1947,8 +1950,7 @@ function createStudentTableRow(student) {
         <td><strong>${escapeHtml(student.title || '')}</strong></td>
         <td>${hideNames ? '' : escapeHtml(student.name || '')}</td>
         <td>${hideNames ? '' : escapeHtml(student.nameEn || '')}</td>
-        <td>${escapeHtml(student.grade || '')}</td>
-        <td><div class="student-table-tags">${tagLabels || '-'}</div></td>
+        <td><div class="student-table-tags">${yearTag + (tagLabels || '') || '-'}</div></td>
     `;
 
     return row;
