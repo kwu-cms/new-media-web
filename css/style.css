@@ -403,6 +403,102 @@ body {
     }
 }
 
+/* Hero QR Code Card */
+.hero-qr-code-card {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1;
+    max-width: 220px;
+    pointer-events: none;
+}
+
+.hero-qr-code-card-body {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.hero-qr-code-card:hover .hero-qr-code-card-body {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.hero-qr-code-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+}
+
+.hero-qr-code-image {
+    width: 160px;
+    height: 160px;
+    display: block;
+    border-radius: 4px;
+}
+
+.hero-qr-code-text {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    line-height: 1.4;
+    pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+    .hero-qr-code-card {
+        top: 15px;
+        right: 15px;
+        max-width: 180px;
+    }
+    
+    .hero-qr-code-card-body {
+        padding: 12px;
+        gap: 10px;
+    }
+    
+    .hero-qr-code-image {
+        width: 133px;
+        height: 133px;
+    }
+    
+    .hero-qr-code-text {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-qr-code-card {
+        top: 10px;
+        right: 10px;
+        max-width: 150px;
+    }
+    
+    .hero-qr-code-card-body {
+        padding: 10px;
+        gap: 8px;
+    }
+    
+    .hero-qr-code-image {
+        width: 106px;
+        height: 106px;
+    }
+    
+    .hero-qr-code-text {
+        font-size: 0.75rem;
+    }
+}
+
 /* Animation Classes */
 .animate-fade-in {
     animation: fadeInUp 1s ease-out;
@@ -1398,6 +1494,72 @@ html {
     border: none;
     box-shadow: var(--elevation-1);
     padding: 16px;
+}
+
+/* Custom Info Alert - カード表示の配色を踏襲 */
+.alert-info-custom {
+    background: rgba(102, 126, 234, 0.1);
+    border-left: 4px solid var(--primary-color);
+    color: var(--text-primary);
+}
+
+.alert-info-custom .fas.fa-info-circle {
+    color: var(--primary-color);
+}
+
+.alert-info-custom strong {
+    color: var(--primary-color);
+}
+
+/* Info Card - カード表示の配色を踏襲 */
+.info-card {
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    box-shadow: var(--elevation-2);
+    border-radius: var(--radius-medium);
+    overflow: hidden;
+}
+
+.info-card .card-body {
+    padding: 24px;
+}
+
+.info-card .info-section {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 20px;
+}
+
+.info-card .info-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.info-card .info-section h6 {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.info-card .info-section ul {
+    padding-left: 20px;
+}
+
+.info-card .info-section li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.info-card .info-section li:last-child {
+    margin-bottom: 0;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ============================================
