@@ -50,6 +50,7 @@ let currentView = 'card'; // 'card' または 'table'
 document.addEventListener('DOMContentLoaded', () => {
     setupScrollNavbar();
     setupViewToggle();
+    setupInfoLink();
     
     // ローカルストレージからビュー設定を読み込む
     const savedView = localStorage.getItem('studentListView');
@@ -78,6 +79,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // ランダム範囲設定を初期化
     initializeRandomRanges();
 });
+
+// Infoリンクの設定
+function setupInfoLink() {
+    const infoLink = document.getElementById('info-link');
+    const infoCardContainer = document.getElementById('info-card-container');
+    
+    if (infoLink && infoCardContainer) {
+        infoLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // 「はじめに」セクションまでスクロール
+            infoCardContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+}
 
 // ページアンロード時にシェーダーをクリーンアップ
 window.addEventListener('beforeunload', () => {
@@ -1892,6 +1908,13 @@ function displayStudentsTable() {
     });
 }
 
+// 日付をチェックして、1/28以降かどうかを判定
+function shouldHideNames() {
+    const today = new Date();
+    const cutoffDate = new Date(2025, 0, 28); // 2025年1月28日
+    return today >= cutoffDate;
+}
+
 // 学生テーブル行を作成
 function createStudentTableRow(student) {
     const row = document.createElement('tr');
@@ -1912,6 +1935,7 @@ function createStudentTableRow(student) {
     }
 
     const tagLabels = createTagLabels(student.tags);
+    const hideNames = shouldHideNames();
     
     row.innerHTML = `
         <td>
@@ -1921,8 +1945,8 @@ function createStudentTableRow(student) {
         </td>
         <td>${escapeHtml(student.studentId || '')}</td>
         <td><strong>${escapeHtml(student.title || '')}</strong></td>
-        <td>${escapeHtml(student.name || '')}</td>
-        <td>${escapeHtml(student.nameEn || '')}</td>
+        <td>${hideNames ? '' : escapeHtml(student.name || '')}</td>
+        <td>${hideNames ? '' : escapeHtml(student.nameEn || '')}</td>
         <td>${escapeHtml(student.grade || '')}</td>
         <td><div class="student-table-tags">${tagLabels || '-'}</div></td>
     `;
@@ -1952,20 +1976,21 @@ function createStudentCard(student) {
     }
 
     const tagLabels = createTagLabels(student.tags);
+    const hideNames = shouldHideNames();
     
     card.innerHTML = `
         <div class="student-card-image-wrapper">
             ${imageSrc 
-                ? `<img src="${imageSrc}" class="card-img-top" alt="${student.name}" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'400\\' height=\\'250\\'%3E%3Crect fill=\\'%23667eea\\' width=\\'400\\' height=\\'250\\'/%3E%3Ctext fill=\\'%23fff\\' font-family=\\'sans-serif\\' font-size=\\'18\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'0.3em\\'%3E画像なし%3C/text%3E%3C/svg%3E'">` 
+                ? `<img src="${imageSrc}" class="card-img-top" alt="${student.name}" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'400\\' height=\\'250\\'%3E%3Crect fill=\\'%23667eea\\' width=\\'400\\' height=\\\'250\\'/%3E%3Ctext fill=\\\'%23fff\\' font-family=\\\'sans-serif\\' font-size=\\\'18\\' x=\\\'50%25\\' y=\\\'50%25\\' text-anchor=\\\'middle\\' dy=\\\'0.3em\\'%3E画像なし%3C/text%3E%3C/svg%3E'">` 
                 : `<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: rgba(255,255,255,0.8); font-size: 1.1rem;">画像なし</div>`}
             <div class="student-card-image-overlay"></div>
         </div>
         <div class="card-body student-card-body">
             ${student.title ? `<h5 class="card-title student-card-title">${escapeHtml(student.title)}</h5>` : ''}
-            <div class="text-end mt-2">
+            ${!hideNames ? `<div class="text-end mt-2">
                 <p class="card-text student-card-name mb-1">${escapeHtml(student.name)}</p>
                 <p class="card-text student-card-name-en mb-0" style="font-size: 0.9rem;">${escapeHtml(student.nameEn)}</p>
-            </div>
+            </div>` : ''}
             ${tagLabels ? `<div class="student-card-tags mt-3">${tagLabels}</div>` : ''}
         </div>
     `;
