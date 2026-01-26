@@ -31,6 +31,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#main-content">2025年度卒業研究一覧</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="info-link">
+                            <i class="fas fa-info-circle me-1"></i>Info
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -64,6 +69,15 @@
                 </div>
             </a>
         </div>
+        <!-- QR Code Card -->
+        <div class="hero-qr-code-card">
+            <div class="hero-qr-code-card-body">
+                <div class="hero-qr-code-image-wrapper">
+                    <img src="assets/images/QR_449023.png" alt="QR Code" class="hero-qr-code-image">
+                </div>
+                <p class="hero-qr-code-text">発表資料・レポートを<br>閲覧できます</p>
+            </div>
+        </div>
     </section>
 
     <!-- Main Content -->
@@ -71,7 +85,46 @@
         <div class="container py-5">
             <div class="row mb-4">
                 <div class="col-12 text-center">
+                    <h2 class="section-title">はじめに</h2>
+                </div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="row mb-5" id="info-card-container">
+                <div class="col-12">
+                    <div class="card info-card">
+                        <div class="card-body">
+                            <div class="info-section mb-4">
+                                <p class="mb-0">
+                                    今年度ニューメディア研究ゼミからは9名が発表を行います。ゼミでは各学生が個人制作を進め、授業では教員とメンバー同士でコメントを交換しながら、それぞれの取り組みを共有してきました。ゼミ生は研究計画に沿って2年間の制作過程を通じて自分自身にとってのテクノロジーと表現の接点を探求し続けてきました。ゲームや3DCG、配信活動の考察など、ゼミ生の意欲的な研究の成果を共有します。
+                                </p>
+                            </div>
+                            <div class="info-section">
+                                <h6 class="fw-bold mb-3">制作レポートおよび発表資料について</h6>
+                                <ul class="mb-0">
+                                    <li>各発表者の発表資料はスライドとレポートを閲覧してください。</li>
+                                    <li>一部の制作物は教室奥メディアラボで体験できます。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12 text-center">
                     <h2 class="section-title">卒業研究一覧</h2>
+                </div>
+            </div>
+
+            <!-- Privacy Alert -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-info-custom alert-dismissible fade show" role="alert" id="privacy-alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>お知らせ：</strong>発表会後は氏名などの情報を非公開で学内利用を限定に公開予定です。
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 </div>
             </div>
 
