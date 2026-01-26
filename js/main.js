@@ -641,7 +641,8 @@ async function loadVideoList() {
         '2025_new_media_00003.mp4',
         '2025_new_media_00004.mp4',
         '2025_new_media_00005.mp4',
-        '2025_new_media_00006.mp4'
+        '2025_new_media_00006.mp4',
+        '2025_new_media_00007.mp4'
     ];
     
     heroVideoList = videoFiles.map(file => `assets/hero/videos/${file}`);
