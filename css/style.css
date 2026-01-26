@@ -421,7 +421,7 @@ html {
     height: 200px;
     background: var(--primary-color);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 }
 
@@ -429,6 +429,7 @@ html {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
     transition: var(--transition-standard);
     background: var(--primary-color);
 }
@@ -499,6 +500,63 @@ html {
     -webkit-box-orient: vertical;
     overflow: hidden;
     letter-spacing: 0.25px;
+}
+
+.student-card-tags {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.student-table-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.tag-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+    transition: var(--transition-standard);
+}
+
+/* 技術・手法タグ（青系） */
+.tag-badge.tag-technique {
+    background-color: rgba(102, 126, 234, 0.25);
+    color: #4457b8;
+    border: 1px solid rgba(102, 126, 234, 0.35);
+}
+
+.tag-badge.tag-technique:hover {
+    background-color: rgba(102, 126, 234, 0.3);
+}
+
+/* ジャンル・形式タグ（緑系） */
+.tag-badge.tag-genre {
+    background-color: rgba(76, 175, 80, 0.25);
+    color: #388e3c;
+    border: 1px solid rgba(76, 175, 80, 0.35);
+}
+
+.tag-badge.tag-genre:hover {
+    background-color: rgba(76, 175, 80, 0.3);
+}
+
+/* テーマ・領域タグ（オレンジ系） */
+.tag-badge.tag-theme {
+    background-color: rgba(255, 152, 0, 0.25);
+    color: #e65100;
+    border: 1px solid rgba(255, 152, 0, 0.35);
+}
+
+.tag-badge.tag-theme:hover {
+    background-color: rgba(255, 152, 0, 0.3);
 }
 
 /* ============================================
@@ -610,6 +668,15 @@ html {
     .student-table thead th:nth-child(4),
     .student-table tbody td:nth-child(4) {
         display: none; /* モバイルでは氏名（英字）を非表示 */
+    }
+    
+    .student-card-tags {
+        gap: 4px;
+    }
+    
+    .tag-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
     }
 }
 
@@ -1000,7 +1067,7 @@ html {
     display: flex;
 }
 
-/* レポートの1ページ目を中央配置 */
+/* 単一ページ表示（プレゼンテーション・レポート1ページ目）を中央配置 */
 .pdf-canvas-wrapper.pdf-single-center {
     display: block;
     text-align: center;
@@ -1008,6 +1075,7 @@ html {
 
 .pdf-canvas-wrapper.pdf-single-center .pdf-canvas-left {
     margin: 0 auto;
+    max-width: 100%;
 }
 
 .pdf-canvas {
@@ -1020,23 +1088,6 @@ html {
 
 .pdf-canvas-left {
     max-width: calc(50% - 5px);
-}
-
-.pdf-canvas-wrapper.pdf-single-center .pdf-canvas-left {
-    max-width: 100%;
-}
-
-.pdf-canvas-right {
-    max-width: calc(50% - 5px);
-}
-
-.pdf-canvas-left {
-    max-width: calc(50% - 5px);
-}
-
-/* レポートの1ページ目は中央配置で最大幅100% */
-.pdf-canvas-wrapper.pdf-single-center .pdf-canvas-left {
-    max-width: 100%;
 }
 
 .pdf-canvas-right {
