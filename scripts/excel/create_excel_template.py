@@ -7,6 +7,11 @@ Excel雛形ファイル作成スクリプト
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.utils import get_column_letter
+from pathlib import Path
+
+# パス設定（プロジェクトルートからの相対パス）
+SCRIPT_DIR = Path(__file__).parent.parent.parent
+EXCEL_FILE = SCRIPT_DIR / "data" / "students.xlsx"
 
 # ワークブックを作成
 wb = openpyxl.Workbook()
@@ -119,7 +124,7 @@ ws2.column_dimensions["B"].width = 50
 ws2.column_dimensions["C"].width = 50
 
 # ファイルを保存
-output_path = "data/students.xlsx"
+output_path = EXCEL_FILE
 wb.save(output_path)
 print(f"Excel雛形ファイルを作成しました: {output_path}")
 print(f"学生データシートに {len(sample_data)} 名の学生データが含まれています。")

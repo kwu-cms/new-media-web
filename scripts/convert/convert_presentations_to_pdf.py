@@ -12,10 +12,11 @@ import sys
 import shutil
 from pathlib import Path
 
-# パス設定
-MASTER_DIR = Path("assets/presentations/master")
-OUTPUT_DIR = Path("assets/presentations")
-EXCEL_FILE = Path("data/students.xlsx")
+# パス設定（プロジェクトルートからの相対パス）
+SCRIPT_DIR = Path(__file__).parent.parent.parent
+MASTER_DIR = SCRIPT_DIR / "assets" / "presentations" / "master"
+OUTPUT_DIR = SCRIPT_DIR / "assets" / "presentations"
+EXCEL_FILE = SCRIPT_DIR / "data" / "students.xlsx"
 
 def check_libreoffice():
     """LibreOfficeが利用可能か確認"""

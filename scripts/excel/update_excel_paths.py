@@ -7,10 +7,11 @@ Excelファイルのプレゼンパスとレポートパスを学籍番号に基
 import sys
 from pathlib import Path
 
-# パス設定
-EXCEL_FILE = Path("data/students.xlsx")
-REPORTS_DIR = Path("assets/reports")
-PRESENTATIONS_DIR = Path("assets/presentations")
+# パス設定（プロジェクトルートからの相対パス）
+SCRIPT_DIR = Path(__file__).parent.parent.parent
+EXCEL_FILE = SCRIPT_DIR / "data" / "students.xlsx"
+REPORTS_DIR = SCRIPT_DIR / "assets" / "reports"
+PRESENTATIONS_DIR = SCRIPT_DIR / "assets" / "presentations"
 
 def update_excel_paths():
     """Excelファイルのパスを更新"""

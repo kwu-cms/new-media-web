@@ -206,10 +206,6 @@ function displayReports() {
         pdfCard.className = 'presentation-pdf-card';
         pdfCard.innerHTML = `
             <div class="pdf-header">
-                <div class="pdf-header-info">
-                    <i class="fas fa-file-alt text-success me-2"></i>
-                    <strong>${escapeHtml(fileName)}</strong>
-                </div>
                 <div class="pdf-controls">
                     <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="prev" title="前のページ">
                         <i class="fas fa-chevron-left"></i>
@@ -305,10 +301,6 @@ function displayPresentations() {
         pdfCard.className = 'presentation-pdf-card';
         pdfCard.innerHTML = `
             <div class="pdf-header">
-                <div class="pdf-header-info">
-                    <i class="fas fa-file-pdf text-danger me-2"></i>
-                    <strong>${escapeHtml(fileName)}</strong>
-                </div>
                 <div class="pdf-controls">
                     <button class="btn btn-sm btn-outline-secondary pdf-control-btn" data-action="prev" title="前のページ">
                         <i class="fas fa-chevron-left"></i>

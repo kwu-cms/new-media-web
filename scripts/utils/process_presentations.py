@@ -9,8 +9,8 @@ import sys
 import subprocess
 from pathlib import Path
 
-# スクリプトのディレクトリ
-SCRIPT_DIR = Path(__file__).parent
+# スクリプトのディレクトリ（プロジェクトルート）
+SCRIPT_DIR = Path(__file__).parent.parent.parent
 
 def run_script(script_name, description):
     """スクリプトを実行"""
@@ -18,7 +18,7 @@ def run_script(script_name, description):
     print(f"{description}")
     print(f"{'='*60}\n")
     
-    script_path = SCRIPT_DIR / script_name
+    script_path = SCRIPT_DIR / "scripts" / "convert" / script_name
     if not script_path.exists():
         print(f"エラー: {script_name} が見つかりません")
         return False
