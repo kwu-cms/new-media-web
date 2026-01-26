@@ -92,6 +92,28 @@ body {
     display: block;
 }
 
+/* シェーダー用のCanvasスタイル */
+.hero-background-video-shader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    display: none;
+}
+
+.hero-background-video-shader.active {
+    opacity: 0.4;
+    display: block;
+}
+
 .hero-section::before {
     content: '';
     position: absolute;
@@ -421,7 +443,7 @@ html {
     height: 200px;
     background: var(--primary-color);
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
 }
 
@@ -429,7 +451,6 @@ html {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center top;
     transition: var(--transition-standard);
     background: var(--primary-color);
 }
@@ -470,7 +491,7 @@ html {
 }
 
 .student-card-name {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--text-primary);
     margin-bottom: 4px;
@@ -479,9 +500,9 @@ html {
 }
 
 .student-card-name-en {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    margin-bottom: 8px;
+    margin-bottom: 0;
     font-weight: 400;
     line-height: 1.4;
     letter-spacing: 0.25px;
@@ -489,12 +510,12 @@ html {
 
 
 .student-card-title {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    font-weight: 600;
     line-height: 1.5;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    margin-bottom: 0;
+    padding-bottom: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -685,40 +706,60 @@ html {
    ============================================ */
 .student-header-card {
     border: none;
-    border-radius: var(--radius-small);
+    border-radius: var(--radius-medium);
     background: var(--primary-color);
     color: white;
     margin-top: 24px;
-    box-shadow: var(--elevation-3);
+    box-shadow: var(--elevation-4);
 }
 
 .student-header-card .card-body {
     background: transparent;
-    padding: 24px;
+    padding: 48px 32px;
 }
 
-.student-header-card h2 {
+.student-header-title {
     color: white;
-    font-size: 1.5rem;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.student-header-name {
+    color: white;
+    font-size: 1.25rem;
     font-weight: 500;
     line-height: 1.3;
-    letter-spacing: 0;
-    margin-bottom: 8px;
-}
-
-.student-header-card .lead {
-    color: rgba(255, 255, 255, 0.87);
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
     letter-spacing: 0.15px;
+    margin-bottom: 0;
 }
 
-.student-header-card .badge {
-    background: rgba(255, 255, 255, 0.2) !important;
+.student-header-name-en {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.25px;
+    margin-bottom: 0;
+}
+
+.student-header-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.student-header-tags .tag-badge {
+    background: rgba(255, 255, 255, 0.25) !important;
     backdrop-filter: blur(10px);
-    border: none;
-    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 6px 14px;
     font-weight: 500;
     font-size: 0.875rem;
     letter-spacing: 0.5px;
@@ -793,6 +834,18 @@ html {
     font-weight: 500;
     font-size: 2.25rem;
     letter-spacing: -0.02em;
+}
+
+.research-title-card .text-end h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+.research-title-card .text-end p {
+    color: var(--text-secondary);
+    margin-bottom: 0;
 }
 
 /* ============================================
@@ -1303,8 +1356,20 @@ html {
         font-size: 1.2rem;
     }
 
-    .student-header-card h2 {
-        font-size: 1.25rem;
+    .student-header-title {
+        font-size: 1.5rem;
+    }
+    
+    .student-header-name {
+        font-size: 1.1rem;
+    }
+    
+    .student-header-name-en {
+        font-size: 0.85rem;
+    }
+    
+    .student-header-card .card-body {
+        padding: 32px 24px;
     }
     
     .research-title-card h1 {
@@ -1354,8 +1419,20 @@ html {
         height: 200px;
     }
 
-    .student-header-card h1 {
-        font-size: 1.75rem;
+    .student-header-title {
+        font-size: 1.25rem;
+    }
+    
+    .student-header-name {
+        font-size: 1rem;
+    }
+    
+    .student-header-name-en {
+        font-size: 0.8rem;
+    }
+    
+    .student-header-card .card-body {
+        padding: 24px 16px;
     }
 
     .carousel-control-prev,

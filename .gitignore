@@ -37,3 +37,6 @@ ENV/
 # Node modules (if using Node.js in the future)
 node_modules/
 package-lock.json
+
+# Image backups
+assets/images_backup/
