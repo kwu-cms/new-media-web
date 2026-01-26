@@ -40,6 +40,10 @@ async function loadExcelData(targetStudentId) {
         
         // データを正規化
         studentsData = jsonData.map((row, index) => {
+            // タグを配列に変換（キーワード列から読み込む）
+            const tagString = row['タグ'] || row['キーワード'] || '';
+            const tags = tagString.split(',').map(tag => tag.trim()).filter(tag => tag);
+            
             return {
                 id: row['No'] || index + 1,
                 grade: row['所属学年'] || '',
@@ -49,7 +53,8 @@ async function loadExcelData(targetStudentId) {
                 title: row['題目'] || row['研究題目'] || '',
                 imagePath: row['画像パス'] || row['画像'] || '',
                 reportPath: row['レポートパス'] || row['レポート'] || '',
-                presentationPath: row['プレゼンパス'] || row['プレゼン'] || row['プレゼンテーション'] || ''
+                presentationPath: row['プレゼンパス'] || row['プレゼン'] || row['プレゼンテーション'] || '',
+                tags: tags
             };
         });
 
@@ -332,8 +337,8 @@ function displayPresentations() {
                     </div>
                     <p class="mt-2">PDFを読み込んでいます...</p>
                 </div>
-                <div class="pdf-canvas-wrapper">
-                    <canvas class="pdf-canvas"></canvas>
+                <div class="pdf-canvas-wrapper pdf-single-center">
+                    <canvas class="pdf-canvas pdf-canvas-left"></canvas>
                 </div>
             </div>
         `;
@@ -349,6 +354,10 @@ async function loadPdfViewer(container, pdfPath, enableSpreadView = false) {
     const viewerContainer = container.querySelector('.pdf-viewer-container');
     // レポート（見開き対応）とプレゼンテーション（単一canvas）の両方に対応
     const canvasLeft = container.querySelector('.pdf-canvas-left') || container.querySelector('.pdf-canvas');
+    // プレゼンテーション資料のcanvasにもpdf-canvas-leftクラスを追加（後方互換性のため）
+    if (canvasLeft && !canvasLeft.classList.contains('pdf-canvas-left')) {
+        canvasLeft.classList.add('pdf-canvas-left');
+    }
     const canvasRight = container.querySelector('.pdf-canvas-right');
     const loadingDiv = container.querySelector('.pdf-loading');
     const canvasWrapper = container.querySelector('.pdf-canvas-wrapper');
@@ -385,7 +394,15 @@ async function loadPdfViewer(container, pdfPath, enableSpreadView = false) {
         
         pageTotal.textContent = pdfDoc.numPages;
         
-        // 初期表示
+        // 初期表示（プレゼンテーション資料の場合は幅に合わせてスケーリング）
+        if (isPresentation) {
+            // 最初のページを取得して幅を計算
+            const firstPage = await pdfDoc.getPage(1);
+            const firstViewport = firstPage.getViewport({ scale: 1.0 });
+            const containerWidth = canvasWrapper.clientWidth || 800; // デフォルト幅
+            scale = Math.min(containerWidth / firstViewport.width, 1.5); // 最大1.5倍まで
+        }
+        
         renderPage(pageNum);
         
         // コントロールボタンのイベントリスナー
@@ -435,20 +452,72 @@ async function loadPdfViewer(container, pdfPath, enableSpreadView = false) {
             queueRenderPage(pageNum);
         });
         
-        fitWidthBtn.addEventListener('click', () => {
+        fitWidthBtn.addEventListener('click', async () => {
             // 幅に合わせる
             const containerWidth = canvasWrapper.clientWidth;
             if (isPresentation) {
-                // プレゼンテーション：単一canvasの幅に合わせる
-                scale = containerWidth / canvasLeft.width;
+                // プレゼンテーション：現在のページの幅に合わせる
+                const page = await pdfDoc.getPage(pageNum);
+                const viewport = page.getViewport({ scale: 1.0 });
+                scale = containerWidth / viewport.width;
             } else {
                 // レポート：見開きの場合は2ページ分の幅を考慮
                 const isSpread = pageNum >= 2;
+                const page = await pdfDoc.getPage(pageNum);
+                const viewport = page.getViewport({ scale: 1.0 });
                 const targetWidth = isSpread ? containerWidth / 2 : containerWidth;
-                scale = targetWidth / (isSpread ? canvasLeft.width : canvasLeft.width);
+                scale = targetWidth / viewport.width;
             }
             queueRenderPage(pageNum);
         });
+        
+        // プレゼンテーション資料の場合、スライドの両端25%をクリックでページ送り
+        if (isPresentation) {
+            viewerContainer.addEventListener('click', (e) => {
+                // コントロールボタンやその他の要素をクリックした場合は無視
+                if (e.target.closest('.pdf-controls') || 
+                    e.target.closest('.pdf-header') ||
+                    e.target.closest('.pdf-loading')) {
+                    return;
+                }
+                
+                const rect = viewerContainer.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const containerWidth = rect.width;
+                const clickRatio = clickX / containerWidth;
+                
+                // 左端25%をクリックした場合：前のページ
+                if (clickRatio <= 0.25) {
+                    if (pageNum > 1) {
+                        pageNum--;
+                        queueRenderPage(pageNum);
+                    }
+                }
+                // 右端25%をクリックした場合：次のページ
+                else if (clickRatio >= 0.75) {
+                    if (pageNum < pdfDoc.numPages) {
+                        pageNum++;
+                        queueRenderPage(pageNum);
+                    }
+                }
+            });
+            
+            // カーソルをポインターに変更（左右25%の領域）
+            viewerContainer.style.cursor = 'pointer';
+            viewerContainer.addEventListener('mousemove', (e) => {
+                const rect = viewerContainer.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const containerWidth = rect.width;
+                const mouseRatio = mouseX / containerWidth;
+                
+                // 左右25%の領域ではポインター、中央50%ではデフォルト
+                if (mouseRatio <= 0.25 || mouseRatio >= 0.75) {
+                    viewerContainer.style.cursor = 'pointer';
+                } else {
+                    viewerContainer.style.cursor = 'default';
+                }
+            });
+        }
         
         // キーボードショートカット
         document.addEventListener('keydown', (e) => {
@@ -591,9 +660,9 @@ async function loadPdfViewer(container, pdfPath, enableSpreadView = false) {
                 } else {
                     canvasWrapper.classList.remove('pdf-single-center');
                 }
-                // プレゼンテーション資料の場合は中央配置クラスを削除
+                // プレゼンテーション資料の場合は中央配置クラスを追加
                 if (isPresentation) {
-                    canvasWrapper.classList.remove('pdf-single-center');
+                    canvasWrapper.classList.add('pdf-single-center');
                 }
             }
             
@@ -620,6 +689,10 @@ async function loadPdfViewer(container, pdfPath, enableSpreadView = false) {
             } else {
                 canvasWrapper.style.display = 'block';
                 canvasWrapper.classList.remove('pdf-spread-view');
+                // プレゼンテーション資料の場合は中央配置クラスを追加
+                if (isPresentation) {
+                    canvasWrapper.classList.add('pdf-single-center');
+                }
             }
             
         } catch (error) {
