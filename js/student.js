@@ -1,6 +1,13 @@
 // JSONファイルのパス
 const JSON_FILE_PATH = 'data/students.json';
 
+// 日付をチェックして、1/28以降かどうかを判定（main.jsと同じ関数）
+function shouldHideNames() {
+    const today = new Date();
+    const cutoffDate = new Date(2025, 0, 28); // 2025年1月28日
+    return today >= cutoffDate;
+}
+
 // 学生データを格納
 let studentsData = [];
 let currentStudent = null;
@@ -120,14 +127,27 @@ function displayStudentDetail() {
 
     // ヘッダーに情報を設定
     document.getElementById('header-research-title').textContent = currentStudent.title || '題目未設定';
-    document.getElementById('header-student-name').textContent = currentStudent.name;
-    document.getElementById('header-student-name-en').textContent = currentStudent.nameEn;
+    // 1/28以降の氏名非表示機能を適用
+    const hideNames = shouldHideNames();
+    
+    if (hideNames) {
+        document.getElementById('header-student-name').textContent = '';
+        document.getElementById('header-student-name-en').textContent = '';
+    } else {
+        document.getElementById('header-student-name').textContent = currentStudent.name;
+        document.getElementById('header-student-name-en').textContent = currentStudent.nameEn;
+    }
     
     // タグを表示（main.jsのcreateTagLabels関数を使用）
     const tagLabels = createTagLabels(currentStudent.tags);
+    
+    // 年度タグを追加
+    const yearTag = currentStudent.grade ? `<span class="tag-badge tag-year">${currentStudent.grade}年度</span>` : '';
+    const allTags = yearTag + (tagLabels || '');
+    
     const headerTagsElement = document.getElementById('header-student-tags');
-    if (tagLabels) {
-        headerTagsElement.innerHTML = tagLabels;
+    if (allTags) {
+        headerTagsElement.innerHTML = allTags;
     } else {
         headerTagsElement.innerHTML = '';
     }

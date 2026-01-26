@@ -775,6 +775,18 @@ html {
     background-color: rgba(255, 152, 0, 0.3);
 }
 
+/* 年度タグ（グレー系） */
+.tag-badge.tag-year {
+    background-color: rgba(158, 158, 158, 0.25);
+    color: #616161;
+    border: 1px solid rgba(158, 158, 158, 0.35);
+    font-weight: 600;
+}
+
+.tag-badge.tag-year:hover {
+    background-color: rgba(158, 158, 158, 0.3);
+}
+
 /* ============================================
    Student Table View - 表形式ビュー
    ============================================ */
