@@ -9,9 +9,10 @@ import sys
 from pathlib import Path
 import re
 
-# パス設定
-ZIP_DIR = Path("assets/images")  # zipフォルダはimagesにリネーム済み
-EXCEL_FILE = Path("data/students.xlsx")
+# パス設定（プロジェクトルートからの相対パス）
+SCRIPT_DIR = Path(__file__).parent.parent.parent
+ZIP_DIR = SCRIPT_DIR / "assets" / "images"  # zipフォルダはimagesにリネーム済み
+EXCEL_FILE = SCRIPT_DIR / "data" / "students.xlsx"
 
 # 画像ファイルの拡張子
 IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.svg', '.PNG', '.JPG', '.JPEG', '.GIF', '.SVG', '.webp', '.WEBP'}
