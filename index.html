@@ -6,14 +6,34 @@
     <title>2025年度 ニューメディア研究ゼミ 卒業研究一覧</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient fixed-top" id="main-navbar" style="transform: translateY(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-graduation-cap me-2"></i>ニューメディア研究ゼミ
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#main-content">卒業研究一覧</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <!-- Hero Section -->
-    <section class="hero-section">
+    <section class="hero-section" id="hero-section">
+        <div class="hero-background-image" id="hero-background-image"></div>
         <div class="hero-overlay"></div>
         <div class="container hero-content">
             <div class="row justify-content-center text-center">
@@ -22,7 +42,7 @@
                     <h2 class="hero-subtitle animate-fade-in-delay">ニューメディア研究ゼミ</h2>
                     <p class="hero-description animate-fade-in-delay-2">卒業研究発表</p>
                     <a href="#main-content" class="hero-scroll-indicator">
-                        <i class="bi bi-chevron-down"></i>
+                        <i class="fas fa-chevron-down"></i>
                     </a>
                 </div>
             </div>
@@ -49,7 +69,7 @@
 
             <!-- Error -->
             <div id="error" class="alert alert-danger alert-dismissible fade" role="alert" style="display: none;">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <i class="fas fa-exclamation-triangle me-2"></i>
                 <strong>エラーが発生しました。</strong> Excelファイルを確認してください。
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
