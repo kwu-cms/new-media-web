@@ -140,11 +140,6 @@ function displayStudentDetail() {
         return;
     }
 
-    // 基本情報を設定
-    document.getElementById('student-name').textContent = currentStudent.name;
-    document.getElementById('student-name-en').textContent = currentStudent.nameEn;
-    document.getElementById('research-title').textContent = currentStudent.title || '題目未設定';
-    
     // ヘッダーに情報を設定
     document.getElementById('header-research-title').textContent = currentStudent.title || '題目未設定';
     document.getElementById('header-student-name').textContent = currentStudent.name;
@@ -177,35 +172,48 @@ function setupNavigationButtons() {
     // 現在の学生のインデックスを取得
     const currentIndex = studentsData.findIndex(s => String(s.id) === String(currentStudent.id));
     
-    // 前後の学生を取得
-    const prevStudent = currentIndex > 0 ? studentsData[currentIndex - 1] : null;
-    const nextStudent = currentIndex < studentsData.length - 1 ? studentsData[currentIndex + 1] : null;
+    // 前後の学生を取得（ループ）
+    const prevStudent = currentIndex > 0 
+        ? studentsData[currentIndex - 1] 
+        : studentsData[studentsData.length - 1]; // 最初の場合は最後の学生
+    const nextStudent = currentIndex < studentsData.length - 1 
+        ? studentsData[currentIndex + 1] 
+        : studentsData[0]; // 最後の場合は最初の学生
     
     // ボタンの参照を取得
     const prevBtn = document.getElementById('prev-student-btn');
     const nextBtn = document.getElementById('next-student-btn');
+    const prevArea = document.getElementById('prev-student-area');
+    const nextArea = document.getElementById('next-student-area');
     
-    // ボタンの有効/無効を設定
+    // ボタンの設定（常に有効、ループ）
     if (prevBtn) {
-        prevBtn.disabled = !prevStudent;
-        if (prevStudent) {
-            prevBtn.onclick = () => {
-                navigateToStudent(prevStudent.id);
-            };
-        } else {
-            prevBtn.onclick = null;
-        }
+        prevBtn.disabled = false;
+        prevBtn.onclick = () => {
+            navigateToStudent(prevStudent.id);
+        };
     }
     
     if (nextBtn) {
-        nextBtn.disabled = !nextStudent;
-        if (nextStudent) {
-            nextBtn.onclick = () => {
-                navigateToStudent(nextStudent.id);
-            };
-        } else {
-            nextBtn.onclick = null;
-        }
+        nextBtn.disabled = false;
+        nextBtn.onclick = () => {
+            navigateToStudent(nextStudent.id);
+        };
+    }
+    
+    // クリック領域の設定（常に有効、ループ）
+    if (prevArea) {
+        prevArea.classList.remove('disabled');
+        prevArea.onclick = () => {
+            navigateToStudent(prevStudent.id);
+        };
+    }
+    
+    if (nextArea) {
+        nextArea.classList.remove('disabled');
+        nextArea.onclick = () => {
+            navigateToStudent(nextStudent.id);
+        };
     }
 }
 
