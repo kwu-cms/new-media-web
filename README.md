@@ -16,7 +16,8 @@
 │   ├── main.js            # メインロジック（Excel読み込み、一覧表示）
 │   └── student.js         # 学生詳細ページ用スクリプト
 ├── data/
-│   └── students.xlsx      # 学生データExcelファイル（ここに配置）
+│   ├── students.xlsx      # 学生データExcelファイル（ここに配置）
+│   └── students.json      # 学生データJSONファイル（自動生成、優先的に使用）
 ├── assets/
 │   ├── images/            # 学生の画像ファイル
 │   ├── reports/           # Wordレポートファイル
@@ -30,7 +31,17 @@
 
 `data/students.xlsx` ファイルを作成し、以下の列を含めてください：
 
-**詳細な項目一覧は [EXCEL項目一覧.md](EXCEL項目一覧.md) を参照してください。**
+**詳細な項目一覧は [docs/EXCEL項目一覧.md](docs/EXCEL項目一覧.md) を参照してください。**
+
+### 1-1. JSONファイルの生成（推奨）
+
+ExcelファイルをJSONファイルに変換することで、読み込み速度が向上します：
+
+```bash
+python3 scripts/excel/convert_excel_to_json.py
+```
+
+これにより `data/students.json` が生成されます。ウェブサイトはJSONファイルを優先的に読み込み、存在しない場合はExcelファイルを読み込みます。
 
 #### 必須項目
 - **No**: 学生番号（1, 2, 3...）
@@ -96,7 +107,8 @@ http-server -p 8000
 
 ## 機能
 
-- ✅ Excelファイルからの自動データ読み込み
+- ✅ ExcelファイルまたはJSONファイルからの自動データ読み込み（JSON優先）
+- ✅ ExcelからJSONへの自動変換スクリプト
 - ✅ レスポンシブデザイン（モバイル対応）
 - ✅ 画像ライトボックス表示
 - ✅ Word/PPTXファイルのダウンロードリンク

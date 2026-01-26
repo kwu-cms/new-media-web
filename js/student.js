@@ -1,5 +1,5 @@
-// Excelファイルのパス
-const EXCEL_FILE_PATH = 'data/students.xlsx';
+// JSONファイルのパス
+const JSON_FILE_PATH = 'data/students.json';
 
 // 学生データを格納
 let studentsData = [];
@@ -59,43 +59,21 @@ document.addEventListener('DOMContentLoaded', () => {
     loadExcelData(studentId);
 });
 
-// Excelファイルを読み込む
+// JSONファイルを読み込む
 async function loadExcelData(targetStudentId) {
     try {
-        const response = await fetch(EXCEL_FILE_PATH);
-        if (!response.ok) {
-            throw new Error('Excelファイルが見つかりません');
+        const jsonResponse = await fetch(JSON_FILE_PATH);
+        if (!jsonResponse.ok) {
+            throw new Error('JSONファイルが見つかりません');
         }
 
-        const arrayBuffer = await response.arrayBuffer();
-        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-        
-        // 最初のシートを取得
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        
-        // JSON形式に変換
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
-        
-        // データを正規化
-        studentsData = jsonData.map((row, index) => {
-            // タグを配列に変換（キーワード列から読み込む）
-            const tagString = row['タグ'] || row['キーワード'] || '';
-            const tags = tagString.split(',').map(tag => tag.trim()).filter(tag => tag);
-            
-            return {
-                id: row['No'] || index + 1,
-                grade: row['所属学年'] || '',
-                studentId: row['学籍番号'] || '',
-                name: row['氏名'] || '',
-                nameEn: row['氏名英字'] || '',
-                title: row['題目'] || row['研究題目'] || '',
-                imagePath: row['画像パス'] || row['画像'] || '',
-                reportPath: row['レポートパス'] || row['レポート'] || '',
-                presentationPath: row['プレゼンパス'] || row['プレゼン'] || row['プレゼンテーション'] || '',
-                tags: tags
-            };
-        });
+        const jsonData = await jsonResponse.json();
+        if (!Array.isArray(jsonData) || jsonData.length === 0) {
+            throw new Error('JSONファイルのデータが無効です');
+        }
+
+        studentsData = jsonData;
+        console.log(`JSONファイルから読み込みました: ${studentsData.length}件の学生データ`);
 
         // 対象の学生を検索
         const student = studentsData.find(s => String(s.id) === String(targetStudentId));
