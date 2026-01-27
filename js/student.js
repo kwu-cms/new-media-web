@@ -91,8 +91,23 @@ async function loadExcelData(targetStudentId) {
         }
 
         currentStudent = student;
-        displayStudentDetail();
-        setupNavigationButtons();
+        console.log('currentStudentを設定しました:', currentStudent);
+        console.log('presentationPath:', currentStudent.presentationPath);
+        console.log('reportPath:', currentStudent.reportPath);
+        console.log('tags:', currentStudent.tags);
+        
+        try {
+            displayStudentDetail();
+        } catch (error) {
+            console.error('displayStudentDetail エラー:', error);
+            showError('学生詳細の表示中にエラーが発生しました: ' + error.message);
+        }
+        
+        try {
+            setupNavigationButtons();
+        } catch (error) {
+            console.error('setupNavigationButtons エラー:', error);
+        }
     } catch (error) {
         console.error('Excel読み込みエラー:', error);
         showError('Excelファイルの読み込みに失敗しました。ファイルが正しく配置されているか確認してください。');
@@ -112,18 +127,35 @@ async function loadExcelData(targetStudentId) {
 
 // 学生詳細を表示
 function displayStudentDetail() {
+    console.log('displayStudentDetail 開始');
+    console.log('currentStudent:', currentStudent);
+    
     const loading = document.getElementById('loading');
     const error = document.getElementById('error');
     const studentDetail = document.getElementById('student-detail');
+
+    if (!loading || !error || !studentDetail) {
+        console.error('必要な要素が見つかりません:', { loading, error, studentDetail });
+        return;
+    }
 
     loading.style.display = 'none';
     error.style.display = 'none';
     studentDetail.style.display = 'block';
 
     if (!currentStudent) {
+        console.error('currentStudentが設定されていません');
         showError('学生情報が見つかりませんでした。');
         return;
     }
+    
+    console.log('currentStudentの内容:', {
+        id: currentStudent.id,
+        title: currentStudent.title,
+        presentationPath: currentStudent.presentationPath,
+        reportPath: currentStudent.reportPath,
+        tags: currentStudent.tags
+    });
 
     // ヘッダーに情報を設定
     document.getElementById('header-research-title').textContent = currentStudent.title || '題目未設定';
