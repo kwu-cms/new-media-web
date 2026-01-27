@@ -158,14 +158,24 @@ function displayStudentDetail() {
     });
 
     // ヘッダーに情報を設定
-    document.getElementById('header-research-title').textContent = currentStudent.title || '題目未設定';
-    // 発表会終了により氏名・英字表記を非表示
-    // 1/28以降の氏名非表示機能を適用
-    const hideNames = shouldHideNames();
+    const headerTitleElement = document.getElementById('header-research-title');
+    if (headerTitleElement) {
+        headerTitleElement.textContent = currentStudent.title || '題目未設定';
+    } else {
+        console.error('header-research-title要素が見つかりません');
+    }
     
-    // 発表会終了により常に非表示
-    document.getElementById('header-student-name').textContent = '';
-    document.getElementById('header-student-name-en').textContent = '';
+    // 発表会終了により氏名・英字表記を非表示
+    // 要素が存在する場合のみ処理（HTMLでコメントアウトされている可能性がある）
+    const headerNameElement = document.getElementById('header-student-name');
+    const headerNameEnElement = document.getElementById('header-student-name-en');
+    
+    if (headerNameElement) {
+        headerNameElement.textContent = '';
+    }
+    if (headerNameEnElement) {
+        headerNameEnElement.textContent = '';
+    }
     
     /* 発表会終了により非表示:
     if (hideNames) {
@@ -185,10 +195,15 @@ function displayStudentDetail() {
     const allTags = yearTag + (tagLabels || '');
     
     const headerTagsElement = document.getElementById('header-student-tags');
-    if (allTags) {
-        headerTagsElement.innerHTML = allTags;
+    if (!headerTagsElement) {
+        console.error('header-student-tags要素が見つかりません');
     } else {
-        headerTagsElement.innerHTML = '';
+        console.log('タグを表示します:', allTags);
+        if (allTags) {
+            headerTagsElement.innerHTML = allTags;
+        } else {
+            headerTagsElement.innerHTML = '';
+        }
     }
 
     // デバッグ: currentStudentの内容を確認
