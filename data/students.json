@@ -1,0 +1,145 @@
+[
+  {
+    "id": 1,
+    "grade": 2025,
+    "studentId": "1522008",
+    "title": "魔法少女キャラクターを規定する武器表現の研究",
+    "imagePath": "image6.png",
+    "reportPath": "1522008.pdf",
+    "presentationPath": "1522008.pdf",
+    "heroVideo": "1522008.mp4",
+    "tags": [
+      "デジタルファブリケーション",
+      "スペキュラティブデザイン",
+      "マンガ・アニメ",
+      "Blender"
+    ]
+  },
+  {
+    "id": 2,
+    "grade": 2025,
+    "studentId": "1522012",
+    "title": "AIを用いたキャラクターの簡便な3D化手法とデザイン保持の研究",
+    "imagePath": "image7.png",
+    "reportPath": "1522012.pdf",
+    "presentationPath": "1522012.pdf",
+    "heroVideo": "",
+    "tags": [
+      "AIモデリング",
+      "3Dモデリング",
+      "キャラクターデザイン",
+      "デザイン技法"
+    ]
+  },
+  {
+    "id": 3,
+    "grade": 2025,
+    "studentId": "1522014",
+    "title": "Vtuberのキャラクター属性を空間デザイン要素へ翻訳するための手法の研究―星川サラを例にして",
+    "imagePath": "image42.png",
+    "reportPath": "1522014.pdf",
+    "presentationPath": "1522014.pdf",
+    "heroVideo": "1522014.mp4",
+    "tags": [
+      "3Dモデリング",
+      "VTuber",
+      "ペルソナ分析",
+      "Blender",
+      "空間デザイン"
+    ]
+  },
+  {
+    "id": 4,
+    "grade": 2025,
+    "studentId": "1522030",
+    "title": "Live2Dを前提としたキャラクターデザイン手法の研究",
+    "imagePath": "image6.png",
+    "reportPath": "1522030.pdf",
+    "presentationPath": "1522030.pdf",
+    "heroVideo": "1522030.mp4",
+    "tags": [
+      "Live2D",
+      "キャラクターデザイン"
+    ]
+  },
+  {
+    "id": 5,
+    "grade": 2025,
+    "studentId": "1522034",
+    "title": "総合芸術としての個人ゲーム制作―『残響旧街路』の世界観構築を中心に",
+    "imagePath": "image17.png",
+    "reportPath": "1522034.pdf",
+    "presentationPath": "1522034.pdf",
+    "heroVideo": "1522034.mp4",
+    "tags": [
+      "ゲーム開発",
+      "Unity",
+      "アドベンチャーゲーム",
+      "UI・UXデザイン",
+      "ピクセルアート"
+    ]
+  },
+  {
+    "id": 6,
+    "grade": 2025,
+    "studentId": "1522036",
+    "title": "『もちこの大冒険』ーピクセルアートによるアクションゲーム表現の研究ー",
+    "imagePath": "image3.png",
+    "reportPath": "1522036.pdf",
+    "presentationPath": "1522036.pdf",
+    "heroVideo": "1522036.mp4",
+    "tags": [
+      "ゲーム開発",
+      "Unity",
+      "アクションゲーム",
+      "体験のデザイン",
+      "ピクセルアート"
+    ]
+  },
+  {
+    "id": 7,
+    "grade": 2025,
+    "studentId": "1522047",
+    "title": "ノベル形式ホラーゲームにおけるキャラクター関係性の揺らぎと、恋愛要素がもたらす機能",
+    "imagePath": "image8.png",
+    "reportPath": "1522047.pdf",
+    "presentationPath": "1522047.pdf",
+    "heroVideo": "",
+    "tags": [
+      "ティラノビルダー",
+      "ノベルゲーム",
+      "イラスト"
+    ]
+  },
+  {
+    "id": 8,
+    "grade": 2025,
+    "studentId": "1522054",
+    "title": "合成音声キャラクターの声と物語体験：ノベルゲーム制作による表現と解釈の深化",
+    "imagePath": "image11.png",
+    "reportPath": "1522054.pdf",
+    "presentationPath": "1522054.pdf",
+    "heroVideo": "1522054.mp4",
+    "tags": [
+      "ティラノビルダー",
+      "ノベルゲーム",
+      "音声合成",
+      "シナリオ"
+    ]
+  },
+  {
+    "id": 9,
+    "grade": 2025,
+    "studentId": "1522074",
+    "title": "自己キャラクター化の実践を通じて捉えるVtuber文化",
+    "imagePath": "image24.png",
+    "reportPath": "1522074.pdf",
+    "presentationPath": "1522074.pdf",
+    "heroVideo": "1522074.mp4",
+    "tags": [
+      "Vtuber",
+      "Live配信",
+      "文化研究"
+    ]
+  }
+]
