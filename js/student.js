@@ -161,19 +161,23 @@ function displayStudentDetail() {
 
     // デバッグ: currentStudentの内容を確認
     console.log('currentStudent:', currentStudent);
-    console.log('presentationPath:', currentStudent.presentationPath);
-    console.log('reportPath:', currentStudent.reportPath);
+    console.log('presentationPath:', currentStudent?.presentationPath);
+    console.log('reportPath:', currentStudent?.reportPath);
 
     // プレゼン資料を表示（最初に表示）
-    // 少し遅延させて確実に表示されるようにする
-    setTimeout(() => {
+    // 即座に表示を試みる
+    try {
         displayPresentations();
-    }, 100);
+    } catch (error) {
+        console.error('displayPresentations エラー:', error);
+    }
 
     // レポートを表示
-    setTimeout(() => {
+    try {
         displayReports();
-    }, 150);
+    } catch (error) {
+        console.error('displayReports エラー:', error);
+    }
     
     // 画像は表示しない（スライドPDFとレポートのみ）
 }
@@ -246,12 +250,23 @@ function displayReports() {
     const reportSection = document.getElementById('report-section');
     const reportContainer = document.getElementById('report-container');
 
+    console.log('displayReports 開始');
+    console.log('reportSection:', reportSection);
+    console.log('reportContainer:', reportContainer);
+    console.log('currentStudent:', currentStudent);
+
     if (!reportSection || !reportContainer) {
         console.error('レポートセクションの要素が見つかりません');
         return;
     }
 
-    if (!currentStudent || !currentStudent.reportPath) {
+    if (!currentStudent) {
+        console.error('currentStudentが設定されていません');
+        reportSection.style.display = 'none';
+        return;
+    }
+
+    if (!currentStudent.reportPath) {
         console.log('レポートパスがありません:', currentStudent);
         reportSection.style.display = 'none';
         return;
@@ -259,6 +274,8 @@ function displayReports() {
 
     // レポートパスを配列に変換（カンマ区切りの場合に対応）
     const reportPaths = currentStudent.reportPath.split(',').map(path => path.trim()).filter(path => path);
+    
+    console.log('reportPaths:', reportPaths);
     
     if (reportPaths.length === 0) {
         console.log('レポートパスが空です');
@@ -348,12 +365,23 @@ function displayPresentations() {
     const presentationSection = document.getElementById('presentation-section');
     const presentationContainer = document.getElementById('presentation-container');
 
+    console.log('displayPresentations 開始');
+    console.log('presentationSection:', presentationSection);
+    console.log('presentationContainer:', presentationContainer);
+    console.log('currentStudent:', currentStudent);
+
     if (!presentationSection || !presentationContainer) {
         console.error('プレゼンテーションセクションの要素が見つかりません');
         return;
     }
 
-    if (!currentStudent || !currentStudent.presentationPath) {
+    if (!currentStudent) {
+        console.error('currentStudentが設定されていません');
+        presentationSection.style.display = 'none';
+        return;
+    }
+
+    if (!currentStudent.presentationPath) {
         console.log('プレゼンテーションパスがありません:', currentStudent);
         presentationSection.style.display = 'none';
         return;
@@ -361,6 +389,8 @@ function displayPresentations() {
 
     // プレゼンパスを配列に変換（カンマ区切りの場合に対応）
     const presentationPaths = currentStudent.presentationPath.split(',').map(path => path.trim()).filter(path => path);
+    
+    console.log('presentationPaths:', presentationPaths);
     
     if (presentationPaths.length === 0) {
         console.log('プレゼンテーションパスが空です');
