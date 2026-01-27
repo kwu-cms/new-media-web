@@ -159,11 +159,21 @@ function displayStudentDetail() {
         headerTagsElement.innerHTML = '';
     }
 
+    // デバッグ: currentStudentの内容を確認
+    console.log('currentStudent:', currentStudent);
+    console.log('presentationPath:', currentStudent.presentationPath);
+    console.log('reportPath:', currentStudent.reportPath);
+
     // プレゼン資料を表示（最初に表示）
-    displayPresentations();
+    // 少し遅延させて確実に表示されるようにする
+    setTimeout(() => {
+        displayPresentations();
+    }, 100);
 
     // レポートを表示
-    displayReports();
+    setTimeout(() => {
+        displayReports();
+    }, 150);
     
     // 画像は表示しない（スライドPDFとレポートのみ）
 }
@@ -257,7 +267,9 @@ function displayReports() {
     }
 
     console.log('レポートを表示:', reportPaths);
+    // 強制的に表示
     reportSection.style.display = 'block';
+    reportSection.style.visibility = 'visible';
     reportContainer.innerHTML = '';
 
     reportPaths.forEach((reportPath, index) => {
@@ -357,7 +369,9 @@ function displayPresentations() {
     }
 
     console.log('プレゼンテーションを表示:', presentationPaths);
+    // 強制的に表示
     presentationSection.style.display = 'block';
+    presentationSection.style.visibility = 'visible';
     presentationContainer.innerHTML = '';
 
     presentationPaths.forEach((presentationPath, index) => {
