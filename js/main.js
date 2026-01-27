@@ -1946,10 +1946,10 @@ function createStudentTableRow(student) {
                 ? `<img src="${imageSrc}" alt="${escapeHtml(student.name)}" class="student-table-image" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'60\\' height=\\'60\\'%3E%3Crect fill=\\'%23667eea\\' width=\\'60\\' height=\\'60\\'/%3E%3Ctext fill=\\'%23fff\\' font-family=\\'sans-serif\\' font-size=\\'10\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\' dy=\\'0.3em\\'%3E画像なし%3C/text%3E%3C/svg%3E'">` 
                 : `<div class="student-table-image-placeholder">画像なし</div>`}
         </td>
-        <td>${escapeHtml(student.studentId || '')}</td>
+        <!-- 発表会終了により非表示: <td>${escapeHtml(student.studentId || '')}</td> -->
         <td><strong>${escapeHtml(student.title || '')}</strong></td>
-        <td>${hideNames ? '' : escapeHtml(student.name || '')}</td>
-        <td>${hideNames ? '' : escapeHtml(student.nameEn || '')}</td>
+        <!-- 発表会終了により非表示: <td>${hideNames ? '' : escapeHtml(student.name || '')}</td> -->
+        <!-- 発表会終了により非表示: <td>${hideNames ? '' : escapeHtml(student.nameEn || '')}</td> -->
         <td><div class="student-table-tags">${yearTag + (tagLabels || '') || '-'}</div></td>
     `;
 
@@ -1993,10 +1993,10 @@ function createStudentCard(student) {
         </div>
         <div class="card-body student-card-body">
             ${student.title ? `<h5 class="card-title student-card-title">${escapeHtml(student.title)}</h5>` : ''}
-            ${!hideNames ? `<div class="text-end mt-2">
+            <!-- 発表会終了により非表示: ${!hideNames ? `<div class="text-end mt-2">
                 <p class="card-text student-card-name mb-1">${escapeHtml(student.name)}</p>
                 <p class="card-text student-card-name-en mb-0" style="font-size: 0.9rem;">${escapeHtml(student.nameEn)}</p>
-            </div>` : ''}
+            </div>` : ''} -->
             ${allTags ? `<div class="student-card-tags mt-3">${allTags}</div>` : ''}
         </div>
     `;
