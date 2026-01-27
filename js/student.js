@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+<<<<<<< HEAD
     // 設定ファイルを読み込む（完了後に学生データを読み込む）
     loadConfigData().then(() => {
         loadExcelData(studentId);
@@ -140,6 +141,10 @@ function shouldHideNames(year = null) {
     // デフォルトは非表示（安全側に倒す）
     return true;
 }
+=======
+    loadExcelData(studentId);
+});
+>>>>>>> 1a7f3d87af6bf09095054437138c0f314d9aa01b
 
 // JSONファイルを読み込む
 async function loadExcelData(targetStudentId) {
@@ -166,6 +171,7 @@ async function loadExcelData(targetStudentId) {
         }
 
         currentStudent = student;
+<<<<<<< HEAD
         console.log('currentStudentを設定しました:', currentStudent);
         console.log('presentationPath:', currentStudent.presentationPath);
         console.log('reportPath:', currentStudent.reportPath);
@@ -183,6 +189,10 @@ async function loadExcelData(targetStudentId) {
         } catch (error) {
             console.error('setupNavigationButtons エラー:', error);
         }
+=======
+        displayStudentDetail();
+        setupNavigationButtons();
+>>>>>>> 1a7f3d87af6bf09095054437138c0f314d9aa01b
     } catch (error) {
         console.error('Excel読み込みエラー:', error);
         showError('Excelファイルの読み込みに失敗しました。ファイルが正しく配置されているか確認してください。');
@@ -223,6 +233,7 @@ function displayStudentDetail() {
         showError('学生情報が見つかりませんでした。');
         return;
     }
+<<<<<<< HEAD
     
     console.log('currentStudentの内容:', {
         id: currentStudent.id,
@@ -231,6 +242,8 @@ function displayStudentDetail() {
         reportPath: currentStudent.reportPath,
         tags: currentStudent.tags
     });
+=======
+>>>>>>> 1a7f3d87af6bf09095054437138c0f314d9aa01b
 
     // ヘッダーに情報を設定
     const headerTitleElement = document.getElementById('header-research-title');
@@ -371,6 +384,7 @@ function navigateToStudent(studentId) {
 function displayReports() {
     const reportSection = document.getElementById('report-section');
     const reportContainer = document.getElementById('report-container');
+<<<<<<< HEAD
 
     console.log('displayReports 開始');
     console.log('reportSection:', reportSection);
@@ -387,6 +401,8 @@ function displayReports() {
         reportSection.style.display = 'none';
         return;
     }
+=======
+>>>>>>> 1a7f3d87af6bf09095054437138c0f314d9aa01b
 
     if (!currentStudent.reportPath) {
         console.log('レポートパスがありません:', currentStudent);
@@ -408,7 +424,10 @@ function displayReports() {
     console.log('レポートを表示:', reportPaths);
     // 強制的に表示
     reportSection.style.display = 'block';
+<<<<<<< HEAD
     reportSection.style.visibility = 'visible';
+=======
+>>>>>>> 1a7f3d87af6bf09095054437138c0f314d9aa01b
     reportContainer.innerHTML = '';
 
     reportPaths.forEach((reportPath, index) => {
@@ -486,6 +505,7 @@ if (typeof pdfjsLib !== 'undefined') {
 function displayPresentations() {
     const presentationSection = document.getElementById('presentation-section');
     const presentationContainer = document.getElementById('presentation-container');
+<<<<<<< HEAD
 
     console.log('displayPresentations 開始');
     console.log('presentationSection:', presentationSection);
@@ -502,6 +522,8 @@ function displayPresentations() {
         presentationSection.style.display = 'none';
         return;
     }
+=======
+>>>>>>> 1a7f3d87af6bf09095054437138c0f314d9aa01b
 
     if (!currentStudent.presentationPath) {
         console.log('プレゼンテーションパスがありません:', currentStudent);
@@ -523,7 +545,10 @@ function displayPresentations() {
     console.log('プレゼンテーションを表示:', presentationPaths);
     // 強制的に表示
     presentationSection.style.display = 'block';
+<<<<<<< HEAD
     presentationSection.style.visibility = 'visible';
+=======
+>>>>>>> 1a7f3d87af6bf09095054437138c0f314d9aa01b
     presentationContainer.innerHTML = '';
 
     presentationPaths.forEach((presentationPath, index) => {
