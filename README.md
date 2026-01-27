@@ -23,7 +23,8 @@
 │   ├── hero-shader.js     # Hero動画用WebGLシェーダーエフェクト
 │   └── random-text.umd.js # ランダムテキストアニメーションライブラリ
 ├── data/
-│   ├── students.json      # 学生データJSONファイル（必須）
+│   ├── students.xlsx      # 学生データExcelファイル（ここに配置）
+│   ├── students.json      # 学生データJSONファイル（自動生成、優先的に使用）
 │   ├── config.json        # 年度別個人情報表示制御設定ファイル
 │   └── hero-texts.json    # Heroセクション用テキストデータ
 ├── assets/
@@ -130,7 +131,7 @@ http-server -p 8000
 ## 機能
 
 ### データ管理
-- ✅ JSONファイルからの自動データ読み込み（`data/students.json`）
+- ✅ ExcelファイルまたはJSONファイルからの自動データ読み込み（JSON優先）
 - ✅ ExcelからJSONへの自動変換スクリプト（`scripts/excel/convert_excel_to_json.py`）
 - ✅ ローカルストレージによるデータキャッシュ
 
