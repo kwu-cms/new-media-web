@@ -24,6 +24,7 @@
 │   └── random-text.umd.js # ランダムテキストアニメーションライブラリ
 ├── data/
 │   ├── students.json      # 学生データJSONファイル（必須）
+│   ├── config.json        # 年度別個人情報表示制御設定ファイル
 │   └── hero-texts.json    # Heroセクション用テキストデータ
 ├── assets/
 │   ├── images/            # 学生の画像ファイル（学籍番号別フォルダ）
@@ -149,9 +150,18 @@ http-server -p 8000
 - ✅ キーボードショートカット対応（矢印キーでページ送り）
 
 ### その他の機能
-- ✅ 氏名非表示機能（指定日以降に自動的に氏名を非表示）
+- ✅ 年度別個人情報表示制御（`data/config.json`で年度ごとに管理）
+- ✅ 氏名非表示機能（発表会後、年度ごとに自動的に個人情報を非表示）
 - ✅ GitHub Actionsによる自動デプロイ（GitHub Pages）
 - ✅ モバイルデバイスでのシェーダー効果自動無効化（パフォーマンス最適化）
+
+### 年度管理機能
+- ✅ 年度別設定ファイルによる個人情報表示制御（`data/config.json`）
+- ✅ 年度更新用スクリプト（`scripts/manage_year.py`）
+- ✅ 発表会日を設定すると自動的に個人情報を非表示
+- ✅ 過去年度のデータをアーカイブに移動可能
+
+詳細は [docs/個人情報保護と年度管理ガイド.md](docs/個人情報保護と年度管理ガイド.md) を参照してください。
 
 ## 注意事項
 
@@ -222,7 +232,24 @@ http-server -p 8000
 - `scripts/excel/convert_excel_to_json.py`: ExcelからJSONへの変換
 - `scripts/convert/process_hero_videos.py`: Hero動画の最適化
 - `scripts/convert/process_final_presentations.py`: プレゼンテーションPDF変換
+- `scripts/manage_year.py`: ⭐ **年度管理スクリプト** - 年度ごとの個人情報表示制御を管理
 - `scripts/cleanup_unused_files.py`: 不要ファイルの削除
+
+### 年度管理スクリプトの使用例
+
+```bash
+# 設定を確認
+python scripts/manage_year.py show-config
+
+# 新年度を追加（2026年度、発表会日: 2027-01-27）
+python scripts/manage_year.py add-year --year 2026 --presentation-date 2027-01-27
+
+# 発表会後に個人情報を非表示にする
+python scripts/manage_year.py hide-info --year 2025
+
+# 年度データをアーカイブに移動
+python scripts/manage_year.py archive --year 2025
+```
 
 ## ライセンス
 

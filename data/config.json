@@ -1,0 +1,12 @@
+{
+  "currentYear": 2025,
+  "years": [
+    {
+      "year": 2025,
+      "presentationDate": "2026-01-27",
+      "hidePersonalInfoAfter": "2026-01-28",
+      "hidePersonalInfo": true,
+      "dataFile": "students.json"
+    }
+  ]
+}

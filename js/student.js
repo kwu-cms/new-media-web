@@ -1,16 +1,13 @@
 // JSONファイルのパス
 const JSON_FILE_PATH = 'data/students.json';
-
-// 日付をチェックして、1/28以降かどうかを判定（main.jsと同じ関数）
-function shouldHideNames() {
-    const today = new Date();
-    const cutoffDate = new Date(2026, 0, 28); // 2026年1月28日
-    return today >= cutoffDate;
-}
+const CONFIG_FILE_PATH = 'data/config.json';
 
 // 学生データを格納
 let studentsData = [];
 let currentStudent = null;
+
+// 設定データを格納
+let configData = null;
 // 画像関連の変数は使用しない（スライドPDFとレポートのみ表示）
 
 // タグの分類定義（main.jsと同じ）
@@ -63,8 +60,86 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    loadExcelData(studentId);
+    // 設定ファイルを読み込む（完了後に学生データを読み込む）
+    loadConfigData().then(() => {
+        loadExcelData(studentId);
+    }).catch(() => {
+        // 設定ファイルの読み込みに失敗した場合も、学生データの読み込みを続行
+        loadExcelData(studentId);
+    });
 });
+
+// 設定ファイルを読み込む（main.jsと同じ関数）
+async function loadConfigData() {
+    try {
+        const configResponse = await fetch(CONFIG_FILE_PATH);
+        if (!configResponse.ok) {
+            throw new Error('設定ファイルが見つかりません');
+        }
+        
+        configData = await configResponse.json();
+        console.log('設定ファイルを読み込みました:', configData);
+        
+        // ローカルストレージに保存
+        localStorage.setItem('configData', JSON.stringify(configData));
+    } catch (error) {
+        console.warn('設定ファイルの読み込みに失敗しました:', error);
+        // ローカルストレージから読み込む（フォールバック）
+        const cachedConfig = localStorage.getItem('configData');
+        if (cachedConfig) {
+            configData = JSON.parse(cachedConfig);
+            console.log('ローカルストレージから設定を読み込みました:', configData);
+        } else {
+            // デフォルト設定を使用
+            configData = {
+                currentYear: new Date().getFullYear(),
+                years: []
+            };
+            console.warn('デフォルト設定を使用します');
+        }
+    }
+}
+
+// 年度ごとの個人情報表示制御を判定（main.jsと同じ関数）
+function shouldHideNames(year = null) {
+    // 設定データが読み込まれていない場合は、デフォルトで非表示
+    if (!configData || !configData.years || configData.years.length === 0) {
+        // フォールバック: ローカルストレージから読み込む
+        const cachedConfig = localStorage.getItem('configData');
+        if (cachedConfig) {
+            configData = JSON.parse(cachedConfig);
+        } else {
+            // 設定がない場合は非表示（安全側に倒す）
+            return true;
+        }
+    }
+    
+    // 年度が指定されていない場合は、現在年度を使用
+    const targetYear = year || configData.currentYear;
+    
+    // 該当年度の設定を検索
+    const yearConfig = configData.years.find(y => y.year === targetYear);
+    
+    if (!yearConfig) {
+        // 設定がない場合は非表示（安全側に倒す）
+        return true;
+    }
+    
+    // フラグが明示的に設定されている場合はそれを使用
+    if (yearConfig.hidePersonalInfo !== undefined) {
+        return yearConfig.hidePersonalInfo;
+    }
+    
+    // 日付ベースの制御
+    if (yearConfig.hidePersonalInfoAfter) {
+        const today = new Date();
+        const hideDate = new Date(yearConfig.hidePersonalInfoAfter);
+        return today >= hideDate;
+    }
+    
+    // デフォルトは非表示（安全側に倒す）
+    return true;
+}
 
 // JSONファイルを読み込む
 async function loadExcelData(targetStudentId) {
