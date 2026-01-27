@@ -127,9 +127,15 @@ function displayStudentDetail() {
 
     // ヘッダーに情報を設定
     document.getElementById('header-research-title').textContent = currentStudent.title || '題目未設定';
+    // 発表会終了により氏名・英字表記を非表示
     // 1/28以降の氏名非表示機能を適用
     const hideNames = shouldHideNames();
     
+    // 発表会終了により常に非表示
+    document.getElementById('header-student-name').textContent = '';
+    document.getElementById('header-student-name-en').textContent = '';
+    
+    /* 発表会終了により非表示:
     if (hideNames) {
         document.getElementById('header-student-name').textContent = '';
         document.getElementById('header-student-name-en').textContent = '';
@@ -137,6 +143,7 @@ function displayStudentDetail() {
         document.getElementById('header-student-name').textContent = currentStudent.name;
         document.getElementById('header-student-name-en').textContent = currentStudent.nameEn;
     }
+    */
     
     // タグを表示（main.jsのcreateTagLabels関数を使用）
     const tagLabels = createTagLabels(currentStudent.tags);
