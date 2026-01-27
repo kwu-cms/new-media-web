@@ -145,8 +145,8 @@ function displayStudentDetail() {
     }
     */
     
-    // タグを表示（main.jsのcreateTagLabels関数を使用）
-    const tagLabels = createTagLabels(currentStudent.tags);
+    // タグを表示（student.js内のcreateTagLabels関数を使用）
+    const tagLabels = createTagLabels(currentStudent.tags || []);
     
     // 年度タグを追加
     const yearTag = currentStudent.grade ? `<span class="tag-badge tag-year">${currentStudent.grade}年度</span>` : '';
@@ -236,7 +236,13 @@ function displayReports() {
     const reportSection = document.getElementById('report-section');
     const reportContainer = document.getElementById('report-container');
 
-    if (!currentStudent.reportPath) {
+    if (!reportSection || !reportContainer) {
+        console.error('レポートセクションの要素が見つかりません');
+        return;
+    }
+
+    if (!currentStudent || !currentStudent.reportPath) {
+        console.log('レポートパスがありません:', currentStudent);
         reportSection.style.display = 'none';
         return;
     }
@@ -245,10 +251,12 @@ function displayReports() {
     const reportPaths = currentStudent.reportPath.split(',').map(path => path.trim()).filter(path => path);
     
     if (reportPaths.length === 0) {
+        console.log('レポートパスが空です');
         reportSection.style.display = 'none';
         return;
     }
 
+    console.log('レポートを表示:', reportPaths);
     reportSection.style.display = 'block';
     reportContainer.innerHTML = '';
 
@@ -328,7 +336,13 @@ function displayPresentations() {
     const presentationSection = document.getElementById('presentation-section');
     const presentationContainer = document.getElementById('presentation-container');
 
-    if (!currentStudent.presentationPath) {
+    if (!presentationSection || !presentationContainer) {
+        console.error('プレゼンテーションセクションの要素が見つかりません');
+        return;
+    }
+
+    if (!currentStudent || !currentStudent.presentationPath) {
+        console.log('プレゼンテーションパスがありません:', currentStudent);
         presentationSection.style.display = 'none';
         return;
     }
@@ -337,10 +351,12 @@ function displayPresentations() {
     const presentationPaths = currentStudent.presentationPath.split(',').map(path => path.trim()).filter(path => path);
     
     if (presentationPaths.length === 0) {
+        console.log('プレゼンテーションパスが空です');
         presentationSection.style.display = 'none';
         return;
     }
 
+    console.log('プレゼンテーションを表示:', presentationPaths);
     presentationSection.style.display = 'block';
     presentationContainer.innerHTML = '';
 
