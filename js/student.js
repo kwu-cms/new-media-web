@@ -239,6 +239,11 @@ function displayStudentDetail() {
     } else {
         console.error('header-research-title要素が見つかりません');
     }
+
+    const breadcrumbCurrent = document.getElementById('breadcrumb-current');
+    if (breadcrumbCurrent) {
+        breadcrumbCurrent.textContent = currentStudent.title || '研究詳細';
+    }
     
     // 発表会終了により氏名・英字表記を非表示
     // 要素が存在する場合のみ処理（HTMLでコメントアウトされている可能性がある）

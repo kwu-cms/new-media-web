@@ -1,0 +1,968 @@
+[
+  {
+    "id": 1,
+    "grade": 2020,
+    "studentId": "",
+    "title": "主観的で曖昧な記憶に基にした3DCG表現に関する研究",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "3Dモデリング",
+      "記憶",
+      "デザイン研究"
+    ]
+  },
+  {
+    "id": 2,
+    "grade": 2020,
+    "studentId": "",
+    "title": "自分だけの、プライベートコーディングの実践",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "プログラミング",
+      "創作活動",
+      "デイリーコーディング"
+    ]
+  },
+  {
+    "id": 3,
+    "grade": 2020,
+    "studentId": "",
+    "title": "「目で見て楽しむ」アニメーション制作―作品「聴覚障がいについて」を通じて",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "アニメーション制作",
+      "社会",
+      "インクルーシブ"
+    ]
+  },
+  {
+    "id": 4,
+    "grade": 2020,
+    "studentId": "",
+    "title": "VRアバター制作の実践と考察",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "VR",
+      "キャラクターデザイン",
+      "創作活動"
+    ]
+  },
+  {
+    "id": 5,
+    "grade": 2020,
+    "studentId": "",
+    "title": "身体表現とリアルタイム映像・演出の融合に関する研究-ZOOMを用いたダンスパフォーマンスによる映像演出の可能性-",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "映像制作",
+      "身体表現",
+      "Instagram"
+    ]
+  },
+  {
+    "id": 6,
+    "grade": 2020,
+    "studentId": "",
+    "title": "SNSを通じたエッセイマンガの表現に関する研究と実践",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "SNS",
+      "マンガ",
+      "デザイン研究",
+      "体験マンガ"
+    ]
+  },
+  {
+    "id": 7,
+    "grade": 2020,
+    "studentId": "",
+    "title": "サンプリング以後の楽曲制作の実践",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "音楽",
+      "創作活動",
+      "デジタル音楽",
+      "ヒップホップ",
+      "DTM"
+    ]
+  },
+  {
+    "id": 8,
+    "grade": 2020,
+    "studentId": "",
+    "title": "インターネット販売を目的とした雑貨ブランドの実践",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "ブランディング",
+      "ウェブ制作",
+      "Creema"
+    ]
+  },
+  {
+    "id": 9,
+    "grade": 2020,
+    "studentId": "",
+    "title": "学生の街としての岡本の魅力を発信する.―「てけてけ岡本」の制作を通じて―",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "地域",
+      "創作活動",
+      "映像制作",
+      "地域広報誌"
+    ]
+  },
+  {
+    "id": 10,
+    "grade": 2020,
+    "studentId": "",
+    "title": "Butterfly Effect-自然をモチーフとしたインタラクティブアート制作の実践-",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "体験型メディア",
+      "自然",
+      "創作活動"
+    ]
+  },
+  {
+    "id": 11,
+    "grade": 2020,
+    "studentId": "",
+    "title": "ドット絵によるデジタル絵本制作の実践",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "ピクセルアート",
+      "絵本",
+      "創作活動"
+    ]
+  },
+  {
+    "id": 12,
+    "grade": 2020,
+    "studentId": "",
+    "title": "言葉遊びを効果的に用いたデザインの実践-レトロポップなグラフィック制作を中心に-",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "タイポグラフィ",
+      "グラフィックデザイン",
+      "ダジャレ"
+    ]
+  },
+  {
+    "id": 13,
+    "grade": 2020,
+    "studentId": "",
+    "title": "ARにおける平面と立体およびその認識に関する実践と研究―わたしたちは平面から何を読み取っているか？",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "AR",
+      "平面と立体",
+      "インターフェースデザイン"
+    ]
+  },
+  {
+    "id": 14,
+    "grade": 2020,
+    "studentId": "",
+    "title": "「つながりの場」としての公共空間デザインー木々の中で過ごす",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "空間デザイン",
+      "建築デザイン",
+      "コミュニティ",
+      "3Dモデリング"
+    ]
+  },
+  {
+    "id": 15,
+    "grade": 2020,
+    "studentId": "",
+    "title": "\"withコロナ\"をモチーフとした主線なしイラストによる物語制作",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "物語",
+      "フラットイラスト",
+      "社会",
+      "デジタルイラスト"
+    ]
+  },
+  {
+    "id": 16,
+    "grade": 2021,
+    "studentId": "",
+    "title": "個人によるミュージックビデオ制作の実践",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "映像制作",
+      "創作活動"
+    ]
+  },
+  {
+    "id": 17,
+    "grade": 2021,
+    "studentId": "",
+    "title": "アンドロイドと人間の境界・調和を主題としたインディーゲーム制作実践の研究",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "ゲーム開発",
+      "ティラノビルダー",
+      "創作活動"
+    ]
+  },
+  {
+    "id": 18,
+    "grade": 2021,
+    "studentId": "",
+    "title": "『偉人絵日記』の制作を通じた、創作活動の継続と変化に関する考察～飽き性で怠惰な人間が1ヶ月間毎日似顔絵を描いてみた～",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "イラスト",
+      "マンガ",
+      "日常",
+      "創作活動",
+      "手書きイラスト"
+    ]
+  },
+  {
+    "id": 19,
+    "grade": 2021,
+    "studentId": "",
+    "title": "2D/3DCGを融合させたグラフィックの省略化を目的とした技法の研究",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "3Dモデリング",
+      "グラフィックデザイン",
+      "デザイン研究"
+    ]
+  },
+  {
+    "id": 20,
+    "grade": 2021,
+    "studentId": "",
+    "title": "3DCG技術の習得による作り手の認識の変化に関する研究",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "3Dモデリング",
+      "デザイン研究"
+    ]
+  },
+  {
+    "id": 21,
+    "grade": 2021,
+    "studentId": "",
+    "title": "自作キャラクターの世界観を作る/拡げるための表現方法についての研究",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "キャラクターデザイン",
+      "世界観",
+      "デザイン研究",
+      "Adobe Character Animator"
+    ]
+  },
+  {
+    "id": 22,
+    "grade": 2021,
+    "studentId": "",
+    "title": "制作活動の習慣化と表現に関する研究 -「自分のための700の落書き」の実践を通じて",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "デイリーコーディング",
+      "日常",
+      "デザイン研究",
+      "創作活動",
+      "クリエイティブコーディング",
+      "p5.js"
+    ]
+  },
+  {
+    "id": 23,
+    "grade": 2022,
+    "studentId": "",
+    "title": "仮想空間での「描き方」―VRアートの制作",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "VR",
+      "メディアアート"
+    ]
+  },
+  {
+    "id": 24,
+    "grade": 2022,
+    "studentId": "",
+    "title": "音楽を描く―Drawing Music―",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "グラフィックデザイン",
+      "音楽"
+    ]
+  },
+  {
+    "id": 25,
+    "grade": 2022,
+    "studentId": "",
+    "title": "思い出をテーマにしたアニメーション作品「to be continued.」の制作",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "アニメーション制作",
+      "物語",
+      "記憶"
+    ]
+  },
+  {
+    "id": 26,
+    "grade": 2022,
+    "studentId": "",
+    "title": "リアルタイムCGとイラストレーションの融合",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "3Dモデリング",
+      "イラスト"
+    ]
+  },
+  {
+    "id": 27,
+    "grade": 2022,
+    "studentId": "",
+    "title": "スマホ制作による線画のアニメーション『私たちまた出逢えるよ』",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "アニメーション制作",
+      "物語",
+      "イラスト",
+      "日記",
+      "実体験"
+    ]
+  },
+  {
+    "id": 28,
+    "grade": 2022,
+    "studentId": "",
+    "title": "『揺らぐぬくもりを抱きしめて。』―ZINE制作を通じて考えたこと―",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "ZINE",
+      "物語",
+      "感情",
+      "創作活動"
+    ]
+  },
+  {
+    "id": 29,
+    "grade": 2022,
+    "studentId": "",
+    "title": "デジタル空間における3DCG作品の鑑賞方法についての研究",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "3Dモデリング",
+      "文化研究"
+    ]
+  },
+  {
+    "id": 30,
+    "grade": 2022,
+    "studentId": "",
+    "title": "「モーション・ダイアリー」―デジタル動画日記の制作―",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "モーショングラフィックス",
+      "映像制作",
+      "記憶",
+      "日常",
+      "After Effects"
+    ]
+  },
+  {
+    "id": 31,
+    "grade": 2022,
+    "studentId": "",
+    "title": "3DCGでKAWAIIを作る方法の研究―KAWAII'S POPパンダと回る不思議な世界―",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "3Dモデリング",
+      "キャラクターデザイン",
+      "世界観",
+      "Blender",
+      "作品集"
+    ]
+  },
+  {
+    "id": 32,
+    "grade": 2023,
+    "studentId": "",
+    "title": "自分の生活の＋1になるようなアプリをつくる",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "アプリ開発",
+      "日常",
+      "Glide"
+    ]
+  },
+  {
+    "id": 33,
+    "grade": 2023,
+    "studentId": "",
+    "title": "オノマトペと作字-質感や音まどを視覚化した表現の研究ー",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "作字",
+      "デザイン研究",
+      "質感表現",
+      "グラフィックデザイン"
+    ]
+  },
+  {
+    "id": 34,
+    "grade": 2023,
+    "studentId": "",
+    "title": "Live2Dの技術的な特性を活かしたVtuber用途モデル制作-キャラクターデザインからフェイストラッキングの実現まで一",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "Live2D",
+      "キャラクターデザイン",
+      "VTuber"
+    ]
+  },
+  {
+    "id": 35,
+    "grade": 2023,
+    "studentId": "",
+    "title": "ブロックチェーンに繋ぎとめられる個人としての私",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "ブロックチェーン",
+      "アイデンティティ",
+      "p5.js",
+      "プログラミング",
+      "NFT",
+      "ジェネラティブアート"
+    ]
+  },
+  {
+    "id": 36,
+    "grade": 2023,
+    "studentId": "",
+    "title": "3Dプリントを用いたコマ撮りアニメーション",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "デジタルファブリケーション",
+      "コマ撮り",
+      "アニメーション制作",
+      "3Dプリンタ"
+    ]
+  },
+  {
+    "id": 37,
+    "grade": 2023,
+    "studentId": "",
+    "title": "誰もが安心して暮らせる社会を提案する映像作品「生きた街中」",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "映像制作",
+      "世界観",
+      "社会",
+      "地域",
+      "After Effects"
+    ]
+  },
+  {
+    "id": 38,
+    "grade": 2023,
+    "studentId": "",
+    "title": "生き生きと動くキャラクターを生み出す：Live2D Cubism Editorを用いたVtuberモデルの制作",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "Live2D",
+      "VTuber"
+    ]
+  },
+  {
+    "id": 39,
+    "grade": 2023,
+    "studentId": "",
+    "title": "3DCGの質感表現を応用したグラフィックデザインの研究",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "3Dモデリング",
+      "グラフィックデザイン",
+      "質感表現",
+      "作品集"
+    ]
+  },
+  {
+    "id": 40,
+    "grade": 2023,
+    "studentId": "",
+    "title": "シンプルイラストを用いた個人によるアニメーション制作",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "アニメーション制作",
+      "イラスト",
+      "創作活動"
+    ]
+  },
+  {
+    "id": 41,
+    "grade": 2023,
+    "studentId": "",
+    "title": "体験型インタラクティブデジタルアート「Kaleidos-Kobe」の制作について",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "体験型メディア",
+      "メディアアート",
+      "地域",
+      "創作活動"
+    ]
+  },
+  {
+    "id": 42,
+    "grade": 2023,
+    "studentId": "",
+    "title": "シネマグラフGIF作品『Fantastical』」の制作を通じて",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "シネマグラフ",
+      "世界観",
+      "創作活動"
+    ]
+  },
+  {
+    "id": 43,
+    "grade": 2024,
+    "studentId": "",
+    "title": "3DCGxAR -キャラクターをデザインし、現実世界に召喚する-",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "AR",
+      "3Dモデリング",
+      "キャラクターデザイン",
+      "3Dプリンタ" 
+    ]
+  },
+  {
+    "id": 44,
+    "grade": 2024,
+    "studentId": "",
+    "title": "Blenderと3Dプリンタでつくる ローポリ動物園",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "Blender",
+      "デジタルファブリケーション",
+      "3Dモデリング",
+      "造形",
+      "3Dプリンタ"
+    ]
+  },
+  {
+    "id": 45,
+    "grade": 2024,
+    "studentId": "",
+    "title": "「ココロの拠り所」-感情にまつわる言葉から着想したマンガ制作-",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "マンガ",
+      "感情",
+      "イラスト",
+      "作品集"
+    ]
+  },
+  {
+    "id": 46,
+    "grade": 2024,
+    "studentId": "",
+    "title": "風景と一体になるピクセルアート",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "ピクセルアート",
+      "風景"
+    ]
+  },
+  {
+    "id": 47,
+    "grade": 2024,
+    "studentId": "",
+    "title": "TouchDesignerを用いた体験型メディアアートの制作とその展示",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "TouchDesigner",
+      "体験型メディア",
+      "メディアアート"
+    ]
+  },
+  {
+    "id": 48,
+    "grade": 2024,
+    "studentId": "",
+    "title": "デジタル制作と小商い「好きなことで、生きていく」方法の検討",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "3DCG",
+      "ブランディング",
+      "クリエイターエコノミー"
+    ]
+  },
+  {
+    "id": 49,
+    "grade": 2024,
+    "studentId": "",
+    "title": "イラストとデジタルアートの融合 -プログラミングを用いた動くファッションデザイン制作-",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "プログラミング",
+      "ファッション",
+      "イラスト",
+      "メディアアート",
+      "p5.js"
+    ]
+  },
+  {
+    "id": 50,
+    "grade": 2024,
+    "studentId": "",
+    "title": "モーショングラフィックスにおける情報伝達の研究",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "モーショングラフィックス",
+      "デザイン研究",
+      "After Effects",
+      "インフォグラフィックス"
+    ]
+  },
+  {
+    "id": 51,
+    "grade": 2024,
+    "studentId": "",
+    "title": "ジェネラティブ・ピクセルアート -動くピクセルアートに関する研究-",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "ピクセルアート",
+      "ジェネラティブ",
+      "創作活動",
+      "p5.js",
+      "プログラミング"
+    ]
+  },
+  {
+    "id": 52,
+    "grade": 2024,
+    "studentId": "",
+    "title": "阪神タイガースを題材にした女性向けウェブサイト「TORACO」の制作",
+    "imagePath": "",
+    "reportPath": "",
+    "presentationPath": "",
+    "heroVideo": "",
+    "tags": [
+      "ウェブ制作",
+      "スポーツ",
+      "ファンダム"
+    ]
+  },
+  {
+    "id": 53,
+    "grade": 2025,
+    "studentId": "1522008",
+    "title": "魔法少女キャラクターを規定する武器表現の研究",
+    "imagePath": "image6.png",
+    "reportPath": "1522008.pdf",
+    "presentationPath": "1522008.pdf",
+    "heroVideo": "1522008.mp4",
+    "tags": [
+      "デジタルファブリケーション",
+      "スペキュラティブデザイン",
+      "Blender",
+      "キャラクターデザイン",
+      "デザイン研究"
+    ]
+  },
+  {
+    "id": 54,
+    "grade": 2025,
+    "studentId": "1522012",
+    "title": "AIを用いたキャラクターの簡便な3D化手法とデザイン保持の研究",
+    "imagePath": "image7.png",
+    "reportPath": "1522012.pdf",
+    "presentationPath": "1522012.pdf",
+    "heroVideo": "",
+    "tags": [
+      "AIモデリング",
+      "3Dモデリング",
+      "キャラクターデザイン",
+      "デザイン研究"
+    ]
+  },
+  {
+    "id": 55,
+    "grade": 2025,
+    "studentId": "1522014",
+    "title": "Vtuberのキャラクター属性を空間デザイン要素へ翻訳するための手法の研究―星川サラを例にして",
+    "imagePath": "image42.png",
+    "reportPath": "1522014.pdf",
+    "presentationPath": "1522014.pdf",
+    "heroVideo": "1522014.mp4",
+    "tags": [
+      "3Dモデリング",
+      "VTuber",
+      "ペルソナ分析",
+      "Blender",
+      "空間デザイン",
+      "キャラクターデザイン",
+      "デザイン研究"
+    ]
+  },
+  {
+    "id": 56,
+    "grade": 2025,
+    "studentId": "1522030",
+    "title": "Live2Dを前提としたキャラクターデザイン手法の研究",
+    "imagePath": "image6.png",
+    "reportPath": "1522030.pdf",
+    "presentationPath": "1522030.pdf",
+    "heroVideo": "1522030.mp4",
+    "tags": [
+      "Live2D",
+      "キャラクターデザイン",
+      "デザイン研究"
+    ]
+  },
+  {
+    "id": 57,
+    "grade": 2025,
+    "studentId": "1522034",
+    "title": "総合芸術としての個人ゲーム制作―『残響旧街路』の世界観構築を中心に",
+    "imagePath": "image17.png",
+    "reportPath": "1522034.pdf",
+    "presentationPath": "1522034.pdf",
+    "heroVideo": "1522034.mp4",
+    "tags": [
+      "ゲーム開発",
+      "Unity",
+      "UI・UXデザイン",
+      "ピクセルアート",
+      "世界観",
+      "地域",
+      "総合芸術"
+    ]
+  },
+  {
+    "id": 58,
+    "grade": 2025,
+    "studentId": "1522036",
+    "title": "『もちこの大冒険』ーピクセルアートによるアクションゲーム表現の研究ー",
+    "imagePath": "image3.png",
+    "reportPath": "1522036.pdf",
+    "presentationPath": "1522036.pdf",
+    "heroVideo": "1522036.mp4",
+    "tags": [
+      "ゲーム開発",
+      "Unity",
+      "体験のデザイン",
+      "ピクセルアート",
+      "世界観",
+      "デザイン研究"
+    ]
+  },
+  {
+    "id": 59,
+    "grade": 2025,
+    "studentId": "1522047",
+    "title": "ノベル形式ホラーゲームにおけるキャラクター関係性の揺らぎと、恋愛要素がもたらす機能",
+    "imagePath": "image8.png",
+    "reportPath": "1522047.pdf",
+    "presentationPath": "1522047.pdf",
+    "heroVideo": "",
+    "tags": [
+      "ティラノビルダー",
+      "ゲーム開発",
+      "イラスト",
+      "キャラクターデザイン",
+      "シナリオ",
+      "ホラー"
+    ]
+  },
+  {
+    "id": 60,
+    "grade": 2025,
+    "studentId": "1522054",
+    "title": "合成音声キャラクターの声と物語体験：ノベルゲーム制作による表現と解釈の深化",
+    "imagePath": "image11.png",
+    "reportPath": "1522054.pdf",
+    "presentationPath": "1522054.pdf",
+    "heroVideo": "1522054.mp4",
+    "tags": [
+      "ティラノビルダー",
+      "ゲーム開発",
+      "音声合成",
+      "シナリオ",
+      "物語"
+    ]
+  },
+  {
+    "id": 61,
+    "grade": 2025,
+    "studentId": "1522074",
+    "title": "自己キャラクター化の実践を通じて捉えるVtuber文化",
+    "imagePath": "image24.png",
+    "reportPath": "1522074.pdf",
+    "presentationPath": "1522074.pdf",
+    "heroVideo": "1522074.mp4",
+    "tags": [
+      "VTuber",
+      "Live配信",
+      "文化研究",
+      "キャラクターデザイン",
+      "アイデンティティ",
+      "Live2D"
+    ]
+  }
+]
