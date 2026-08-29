@@ -42,7 +42,7 @@ package-lock.json
 assets/images_backup/
 
 # Large presentation files (over 100MB)
-assets/presentations/master/pptx/卒業研究発表資料_1522034_（非公開）.pptx
+assets/presentations/master/pptx/卒業研究発表資料_1234567_非公開.pptx
 assets/presentations/rehearsal/pptx/1522034.pptx
 
 # Presentation files (large files)

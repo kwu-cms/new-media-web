@@ -6,7 +6,6 @@ Excel雛形ファイル作成スクリプト
 
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
-from openpyxl.utils import get_column_letter
 from pathlib import Path
 
 # パス設定（プロジェクトルートからの相対パス）
@@ -31,17 +30,9 @@ headers = [
     "プレゼンパス"
 ]
 
-# サンプルデータ（提供された学生リスト）
+# サンプルデータ（個人情報は含めない）
 sample_data = [
-    [1, "メデ4", "1522008", "（非公開）", "（Non-public）", "", "", "", ""],
-    [2, "メデ4", "1522012", "（非公開）", "（Non-public）", "", "", "", ""],
-    [3, "メデ4", "1522014", "（非公開）", "（Non-public）", "", "", "", ""],
-    [4, "メデ4", "1522030", "（非公開）", "（Non-public）", "", "", "", ""],
-    [5, "メデ4", "1522034", "（非公開）", "（Non-public）", "", "", "", ""],
-    [6, "メデ4", "1522036", "（非公開）", "（Non-public）", "", "", "", ""],
-    [7, "メデ4", "1522047", "（非公開）", "（Non-public）", "", "", "", ""],
-    [8, "メデ4", "1522054", "（非公開）", "（Non-public）", "", "", "", ""],
-    [9, "メデ4", "1522074", "（非公開）", "（Non-public）", "", "", "", ""],
+    [1, "メデ4", "1234567", "（非公開）", "（Non-public）", "研究題目の例", "image1.png", "1234567.pdf", "1234567.pdf"],
 ]
 
 # ヘッダー行を書き込み
@@ -75,12 +66,9 @@ for row_num, row_data in enumerate(sample_data, 2):
     for col_num, value in enumerate(row_data, 1):
         cell = ws.cell(row=row_num, column=col_num, value=value)
         cell.alignment = Alignment(horizontal="left", vertical="center")
-        
-        # No列は中央揃え
         if col_num == 1:
             cell.alignment = Alignment(horizontal="center", vertical="center")
 
-# ヘッダー行の高さを調整
 ws.row_dimensions[1].height = 25
 
 # 説明シートを追加
@@ -93,13 +81,13 @@ instructions = [
     ["列名", "説明", "例", "", "", "", "", "", ""],
     ["No", "学生番号（連番）", "1, 2, 3...", "", "", "", "", "", ""],
     ["所属学年", "所属学年", "メデ4", "", "", "", "", "", ""],
-    ["学籍番号", "学生の学籍番号", "1522008", "", "", "", "", "", ""],
+    ["学籍番号", "学生の学籍番号", "1234567", "", "", "", "", "", ""],
     ["氏名", "学生の氏名（日本語）", "（非公開）", "", "", "", "", "", ""],
     ["氏名英字", "学生の氏名（ローマ字）", "（Non-public）", "", "", "", "", "", ""],
-    ["題目", "卒業研究の題目", "AIを活用した画像認識システムの開発", "", "", "", "", "", ""],
-    ["画像パス", "画像ファイル名（複数可、カンマ区切り）", "image1.jpg または image1.jpg,image2.jpg", "", "", "", "", "", ""],
-    ["レポートパス", "Wordレポートファイル名（複数可、カンマ区切り）", "report.docx または report1.docx,report2.docx", "", "", "", "", "", ""],
-    ["プレゼンパス", "PPTXプレゼン資料ファイル名（複数可、カンマ区切り）", "presentation.pptx または pres1.pptx,pres2.pptx", "", "", "", "", "", ""],
+    ["題目", "卒業研究の題目", "研究題目の例", "", "", "", "", "", ""],
+    ["画像パス", "画像ファイル名（複数可、カンマ区切り）", "image1.png", "", "", "", "", "", ""],
+    ["レポートパス", "Wordレポートファイル名（複数可、カンマ区切り）", "1234567.pdf", "", "", "", "", "", ""],
+    ["プレゼンパス", "PPTXプレゼン資料ファイル名（複数可、カンマ区切り）", "1234567.pdf", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", ""],
     ["注意事項", "", "", "", "", "", "", "", ""],
     ["1. ファイル名に日本語や特殊文字を含めないことを推奨します", "", "", "", "", "", "", "", ""],
@@ -118,13 +106,10 @@ for row_num, row_data in enumerate(instructions, 1):
             cell.font = Font(bold=True)
             cell.fill = PatternFill(start_color="E0E0E0", end_color="E0E0E0", fill_type="solid")
 
-# 説明シートの列幅を調整
 ws2.column_dimensions["A"].width = 20
 ws2.column_dimensions["B"].width = 50
 ws2.column_dimensions["C"].width = 50
 
-# ファイルを保存
-output_path = EXCEL_FILE
-wb.save(output_path)
-print(f"Excel雛形ファイルを作成しました: {output_path}")
-print(f"学生データシートに {len(sample_data)} 名の学生データが含まれています。")
+wb.save(EXCEL_FILE)
+print(f"Excel雛形ファイルを作成しました: {EXCEL_FILE}")
+print(f"サンプル行: {len(sample_data)} 件")

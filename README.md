@@ -65,9 +65,9 @@ python3 scripts/excel/convert_excel_to_json.py
 #### 必須項目
 - **No**: 学生番号（1, 2, 3...）
 - **所属学年**: メデ4
-- **学籍番号**: 1522008など
-- **氏名**: （非公開）など
-- **氏名英字**: （Non-public）など
+- **学籍番号**: 1234567など
+- **氏名**: （非公開）
+- **氏名英字**: （Non-public）
 
 #### 推奨項目
 - **題目** または **研究題目**: 卒業研究の題目
@@ -77,7 +77,7 @@ python3 scripts/excel/convert_excel_to_json.py
 
 ### 2. ファイルの配置
 
-1. **画像ファイル**: `assets/images/学籍番号/` フォルダに配置（例: `assets/images/1522008/image6.png`）
+1. **画像ファイル**: `assets/images/学籍番号/` フォルダに配置（例: `assets/images/1234567/image6.png`）
 2. **レポートPDFファイル**: `assets/reports/pdf/` フォルダに配置（ファイル名: `学籍番号.pdf`）
 3. **プレゼン資料PDFファイル**: `assets/presentations/master/pdf/` フォルダに配置（ファイル名: `学籍番号.pdf`）
 4. **Hero動画ファイル**: `assets/hero/videos/` フォルダに配置（オプション）
@@ -174,7 +174,7 @@ http-server -p 8000
 
 4. **PDFファイル**: レポートとプレゼンテーション資料はPDF形式で配置してください。ブラウザ内でPDF.jsを使用して表示されます。
 
-5. **画像ファイルの配置**: 画像ファイルは `assets/images/学籍番号/` フォルダに配置してください（例: `assets/images/1522008/image6.png`）。
+5. **画像ファイルの配置**: 画像ファイルは `assets/images/学籍番号/` フォルダに配置してください（例: `assets/images/1234567/image6.png`）。
 
 6. **モバイル対応**: モバイルデバイスでは、パフォーマンス最適化のためWebGLシェーダー効果が自動的に無効化されます。通常の動画表示にフォールバックします。
 
@@ -199,14 +199,14 @@ http-server -p 8000
 ### PDFが表示されない
 
 - PDFファイルが `assets/reports/pdf/` または `assets/presentations/master/pdf/` に存在するか確認
-- JSONファイル内の`reportPath`または`presentationPath`が正しいか確認（例: `1522008.pdf`）
+- JSONファイル内の`reportPath`または`presentationPath`が正しいか確認（例: `1234567.pdf`）
 - ブラウザのコンソールでエラーメッセージを確認
 - PDF.jsの読み込みエラーがないか確認
 
 ### Hero動画が表示されない
 
 - 動画ファイルが `assets/hero/videos/` に存在するか確認
-- JSONファイル内の`heroVideo`が正しいか確認（例: `1522008.mp4`）
+- JSONファイル内の`heroVideo`が正しいか確認（例: `1234567.mp4`）
 - ブラウザが動画形式（MP4）をサポートしているか確認
 - モバイルデバイスの場合、シェーダー効果は無効化されます（正常な動作）
 
